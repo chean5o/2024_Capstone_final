@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 그림자 효과 -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#50000000"/> <!-- 그림자 색상 -->
+            <corners android:radius="3dp"/> <!-- 모서리 둥글기 -->
+            <padding
+                android:bottom="2dp"
+            android:right="2dp"
+            android:left="2dp"/>    <!-- 그림자가 왼쪽으로 퍼지는 정도 -->
+        </shape>
+    </item>
+    <!-- 실제 내용이 표시될 배경 -->
+    <item android:left="1dp" android:right="1dp" android:top="1dp" android:bottom="3dp">
+        <shape android:shape="rectangle">
+            <solid android:color="@android:color/white"/> <!-- 배경 색상 -->
+            <corners android:radius="3dp"/>
+        </shape>
+    </item>
+</layer-list>
