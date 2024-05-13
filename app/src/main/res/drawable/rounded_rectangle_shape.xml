@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- res/drawable/rounded_rectangle_shape.xml -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <solid android:color="#FFFFFF" /> <!-- 배경색 설정 -->
+
+    <corners android:radius="20dp" /> <!-- 모서리 둥글기 설정 -->
+
+    <!-- 다른 속성들도 필요에 따라 설정할 수 있습니다. -->
+
+</shape>
