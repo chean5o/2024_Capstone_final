@@ -4,18 +4,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:padding="16dp"
+        android:id="@+id/fragment_container1">
 
-        <ProgressBar
-            android:id="@+id/progressBar2"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="378dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-        <!-- 예산을 위한 슬라이더 추가 -->
+    <!-- 예산을 위한 슬라이더 추가 -->
 <!--        <ScrollView-->
 <!--            android:id="@+id/scrollView"-->
 <!--            android:layout_width="match_parent"-->
@@ -26,230 +18,99 @@
 <!--            app:layout_constraintEnd_toEndOf="parent"-->
 <!--            app:layout_constraintStart_toStartOf="parent"-->
 <!--            app:layout_constraintTop_toTopOf="parent">-->
+    <LinearLayout
+        android:id="@+id/del"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/shadow"
+            android:orientation="vertical"
+            android:padding="16dp">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:background="@drawable/shadow"
-                android:padding="16dp">
-                <LinearLayout
-                    android:layout_width="match_parent"
+                android:orientation="horizontal">
+
+                <!-- 성별 선택 라디오 버튼 그룹 -->
+                <RadioGroup
+                    android:id="@+id/radioGroup"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:orientation="horizontal">
 
-                    <!-- 성별 선택 라디오 버튼 그룹 -->
-                    <RadioGroup
-                        android:id="@+id/radioGroup"
-                        android:layout_width="0dp"
+                    <RadioButton
+                        android:id="@+id/radioMale"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="horizontal">
+                        android:text="남" />
 
-                        <RadioButton
-                            android:id="@+id/radioMale"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="남"/>
-
-                        <RadioButton
-                            android:id="@+id/radioFemale"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="여"/>
-                    </RadioGroup>
-
-                    <!-- 연령대 선택 드롭다운 메뉴 (스피너) -->
-                    <Spinner
-                        android:id="@+id/ageSpinner"
-                        android:layout_width="0dp"
+                    <RadioButton
+                        android:id="@+id/radioFemale"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"/>
-                </LinearLayout>
+                        android:text="여" />
+                </RadioGroup>
+
+                <!-- 연령대 선택 드롭다운 메뉴 (스피너) -->
+                <Spinner
+                    android:id="@+id/ageSpinner"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" />
             </LinearLayout>
+        </LinearLayout>
 
-            <LinearLayout
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/shadow"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <com.google.android.material.slider.RangeSlider
+                android:id="@+id/budgetSlider"
+                android:layout_width="match_parent"
+                android:layout_height="128dp"
+                android:layout_marginBottom="16dp"
+                android:stepSize="100"
+                android:valueFrom="0"
+                android:valueTo="10000"
+                app:labelBehavior="withinBounds" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/shadow"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <com.google.android.material.slider.RangeSlider
+                android:id="@+id/biasSlider"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:background="@drawable/shadow"
-                android:padding="16dp">
-                <com.google.android.material.slider.RangeSlider
-                    android:id="@+id/budgetSlider"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:valueFrom="0"
-                    android:valueTo="10000"
-                    android:stepSize="100"
-                    app:labelBehavior="withinBounds"
-                    android:layout_marginBottom="16dp"/>
-            </LinearLayout>
+                android:layout_marginBottom="16dp"
+                android:stepSize="100"
+                android:valueFrom="0"
+                android:valueTo="10000"
+                app:labelBehavior="withinBounds" />
+        </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:background="@drawable/shadow"
-                android:padding="16dp">
-                <com.google.android.material.slider.RangeSlider
-                    android:id="@+id/biasSlider"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:valueFrom="0"
-                    android:valueTo="10000"
-                    android:stepSize="100"
-                    app:labelBehavior="withinBounds"
-                    android:layout_marginBottom="16dp"/>
-            </LinearLayout>
+        <Button
+            android:id="@+id/next_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="다음" />
+    </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:background="@drawable/shadow"
-                android:padding="16dp">
-                <!-- 질문 1 -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="질문 1: 도시? 자연?"
-                    android:layout_marginBottom="8dp"/>
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginBottom="16dp">
-                    <!--        android:background="@drawable/box">-->
-                    <Button
-                        android:id="@+id/yesButton1"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="예"
-                        android:background="@drawable/button"
-                        android:tag="yes1"/>
-                    <Button
-                        android:id="@+id/noButton1"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="아니오"
-                        android:background="@drawable/button"
-                        android:tag="no1"/>
-                </LinearLayout>
-            </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:background="@drawable/shadow"
-                android:padding="16dp">
-                <!-- 질문 1 -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="질문 2: 도시? 자연?"
-                    android:layout_marginBottom="8dp"/>
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginBottom="16dp">
-                    <!--        android:background="@drawable/box">-->
-                    <Button
-                        android:id="@+id/yesButton2"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="예"
-                        android:background="@drawable/button"
-                        android:tag="yes2"/>
-                    <Button
-                        android:id="@+id/noButton2"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="아니오"
-                        android:background="@drawable/button"
-                        android:tag="no2"/>
-                </LinearLayout>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:background="@drawable/shadow"
-                android:padding="16dp">
-                <!-- 질문 1 -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="질문 3: 도시? 자연?"
-                    android:layout_marginBottom="8dp"/>
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginBottom="16dp">
-                    <!--        android:background="@drawable/box">-->
-                    <Button
-                        android:id="@+id/yesButton3"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="예"
-                        android:background="@drawable/button"
-                        android:tag="yes3"/>
-                    <Button
-                        android:id="@+id/noButton3"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="아니오"
-                        android:background="@drawable/button"
-                        android:tag="no3"/>
-                </LinearLayout>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:background="@drawable/shadow"
-                android:padding="16dp">
-                <!-- 질문 1 -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="질문 4: 도시? 자연?"
-                    android:layout_marginBottom="8dp"/>
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginBottom="16dp">
-                    <!--        android:background="@drawable/box">-->
-                    <Button
-                        android:id="@+id/yesButton4"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="예"
-                        android:background="@drawable/button"
-                        android:tag="yes4"/>
-                    <Button
-                        android:id="@+id/noButton4"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="아니오"
-                        android:background="@drawable/button"
-                        android:tag="no4"/>
-                </LinearLayout>
-            </LinearLayout>
-
-        <!--    <LinearLayout-->
+    <!--    <LinearLayout-->
         <!--        android:layout_width="match_parent"-->
         <!--        android:layout_height="wrap_content"-->
         <!--        android:orientation="vertical"-->

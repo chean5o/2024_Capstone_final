@@ -1,34 +1,31 @@
 package com.example.travelapp.ui.makecourse
 
+//import com.example.travelapp.databinding.FragmentMakecourseBinding
+//import android.os.Bundle
+//import android.view.View
+//import androidx.fragment.app.Fragment
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.Button
-import android.widget.TextView
+import android.widget.LinearLayout
+import android.widget.RadioGroup
+import android.widget.Spinner
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import com.example.travelapp.R
 import com.example.travelapp.VoteResult
 import com.example.travelapp.VoteService
-//import com.example.travelapp.databinding.FragmentMakecourseBinding
+import com.google.android.material.slider.RangeSlider
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-//import android.os.Bundle
-//import android.view.View
-//import androidx.fragment.app.Fragment
-import com.google.android.material.slider.Slider
-import androidx.core.content.ContextCompat
-import android.widget.ArrayAdapter
-import android.widget.Spinner
-import android.widget.RadioGroup
-import android.widget.AdapterView
-import com.google.android.material.slider.RangeSlider
 
 
 class MakeCourseFragment : Fragment() {
@@ -45,6 +42,12 @@ class MakeCourseFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val startQuestionsButton = view.findViewById<Button>(R.id.next_button)
+        startQuestionsButton.setOnClickListener {
+            Log.d("MakeCourseFragment", "Next button clicked")
+            goToQuestionsFragment()
+        }
 
         // Retrofit 인스턴스 생성
         val retrofit = Retrofit.Builder()
@@ -96,6 +99,10 @@ class MakeCourseFragment : Fragment() {
 
                 // Display a toast message with the changed value
                 Toast.makeText(context, "${voteResults[7]}으로 변경되었습니다.", Toast.LENGTH_SHORT).show()
+
+                if (voteResults.size == 3) {
+                    sendVoteResults(voteResults, voteService)
+                }
             }
         })
 
@@ -134,7 +141,7 @@ class MakeCourseFragment : Fragment() {
         // 투표 결과를 저장할 MutableMap 생성
 //        val voteResults = mutableMapOf<Int, String>()
         // 버튼 클릭 리스너 설정
-        val buttonIds = listOf(R.id.yesButton1, R.id.noButton1, R.id.yesButton2, R.id.noButton2, R.id.yesButton3, R.id.noButton3, R.id.yesButton4, R.id.noButton4)
+        /*val buttonIds = listOf(R.id.yesButton1, R.id.noButton1, R.id.yesButton2, R.id.noButton2, R.id.yesButton3, R.id.noButton3, R.id.yesButton4, R.id.noButton4)
         buttonIds.forEach { id ->
             view.findViewById<Button>(id).setOnClickListener { buttonView ->
                 val answer = if (buttonView.tag.toString().startsWith("yes")) "Y" else "N"
@@ -150,7 +157,7 @@ class MakeCourseFragment : Fragment() {
                     sendVoteResults(voteResults, voteService)
                 }
             }
-        }
+        }*/
     }
 
     private fun sendVoteResults(voteResults: MutableMap<Int, String>, voteService: VoteService) {
@@ -168,8 +175,19 @@ class MakeCourseFragment : Fragment() {
 
             override fun onFailure(call: Call<Void>, t: Throwable) {
                 Toast.makeText(context, "투표 결과 전송 중 오류가 발생했습니다: ${t.message}", Toast.LENGTH_SHORT).show()
+                // 오류 로그 기록
+                Log.e("QuestionsFragment", "투표 결과 전송 실패: ${t.message}", t)
             }
         })
+    }
+
+    private fun goToQuestionsFragment() {
+        view?.findViewById<LinearLayout>(R.id.del)?.visibility = View.GONE
+
+        requireActivity().supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container1, QuestionsFragment())
+            .addToBackStack(null)  // 이전 프래그먼트로 돌아갈 수 있도록 백 스택에 추가
+            .commit()
     }
 
 //    override fun onDestroyView() {fh

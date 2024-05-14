@@ -50,6 +50,8 @@ dependencies {
     implementation(libs.androidx.navigation.ui.ktx)
     implementation(libs.play.services.location)
     implementation(libs.androidx.legacy.support.v4)
+    implementation(libs.androidx.activity)
+    implementation(libs.cronet.embedded)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -79,4 +81,6 @@ dependencies {
     implementation ("androidx.compose.material:material:1.0.1")
 //    implementation ("androidx.material3:material3:1.4.0")
     implementation ("com.google.android.material:material:1.4.0")
+    implementation("com.google.android.gms:play-services-location:18.0.0")
+    implementation("com.google.code.gson:gson:2.8.8")
 }
