@@ -88,7 +88,7 @@ class MakeCourseFragment : Fragment() {
             }
 
             override fun onStopTrackingTouch(slider: RangeSlider) {
-                // 사용자가 슬라이더 조작을 마쳤을 때 실행될 코드
+                // 사용자가 슬라이더 조작을 마쳤을 때 실행될 코드g
                 val value = slider.values[0] // 첫 번째 값을 가져옵니다. RangeSlider의 경우 범위를 가지므로, 필요에 따라 적절하게 값을 선택하세요.
 
                 // Convert the slider value to a String and store it in the map
