@@ -6,28 +6,77 @@
     android:layout_height="match_parent"
     tools:context=".ui.map.MapFragment">
 
-    <!--    <TextView
-        android:id="@+id/text_dashboard"
-        android:layout_width="match_parent"
+    <!-- 검색창 -->
+
+    <!-- 검색 버튼 -->
+    <EditText
+        android:id="@+id/search_edit_text"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginStart="36dp"
         android:layout_marginEnd="8dp"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="@id/map_view"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:hint="검색"
+        android:inputType="text"
+        app:layout_constraintEnd_toStartOf="@id/search_button"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />-->
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="27dp"
+        android:layout_height="28dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/baseline_search_24"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/search_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:contentDescription="Search location"
+        android:text="Search"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <FrameLayout
         android:id="@+id/map_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="24dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="56dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/search_button" >
+
+        <Button
+            android:id="@+id/btnCafe"
+            android:layout_width="51dp"
+            android:layout_height="34dp"
+            android:layout_gravity="top|start"
+            android:layout_marginStart="10dp"
+            android:layout_marginBottom="10dp"
+            android:backgroundTint="#FFFFFF"
+            android:text="카페"
+            android:textColor="#666666"
+            android:textSize="8sp" />
+
+        <Button
+            android:id="@+id/btnCultural"
+            android:layout_width="51dp"
+            android:layout_height="34dp"
+            android:layout_gravity="top|end"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            android:backgroundTint="#FFFFFF"
+            android:text="문화"
+            android:textColor="#666666"
+            android:textSize="8sp" />
+
+    </FrameLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

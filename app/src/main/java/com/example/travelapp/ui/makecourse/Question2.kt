@@ -33,12 +33,6 @@ class Question2 : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val startQuestionsButton = view.findViewById<Button>(R.id.next_button2)
-        startQuestionsButton.setOnClickListener {
-            Log.d("MakeCourseFragment", "Next button clicked")
-            goToQuestionsFragment()
-        }
-
         // Retrofit 인스턴스 생성 및 초기화
         val retrofit = Retrofit.Builder()
             .baseUrl("http://10.0.2.2:5000/") // 본인의 서버 URL로 변경하세요
@@ -48,6 +42,19 @@ class Question2 : Fragment() {
         voteService = retrofit.create(VoteService::class.java)
 
         setupButtonListeners()
+
+        val startQuestionsButton = view.findViewById<Button>(R.id.next_button2)
+        startQuestionsButton.setOnClickListener {
+            Log.d("MakeCourseFragment", "Next button clicked")
+
+            if (voteResults.size == 1) { // 필요한 질문의 수에 따라 변경 가능
+                sendVoteResults(voteResults)
+                goToQuestionsFragment()
+            }
+            else {
+                Toast.makeText(context, "모든 항목을 선택해주세요.", Toast.LENGTH_LONG).show()
+            }
+        }
     }
 
     private fun setupButtonListeners() {
@@ -59,10 +66,6 @@ class Question2 : Fragment() {
                 voteResults[questionId] = answer
 
                 Toast.makeText(context, "질문 $questionId: $answer 선택됨", Toast.LENGTH_SHORT).show()
-
-                if (voteResults.size == 1) {
-                    sendVoteResults(voteResults)
-                }
             }
         }
     }
