@@ -1,0 +1,6 @@
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 버튼이 눌렸을 때의 색상 -->
+    <item android:state_selected="true" android:color="@color/press_button"/>
+    <!-- 기본 색상 -->
+    <item android:color="@color/button"/>
+</selector>

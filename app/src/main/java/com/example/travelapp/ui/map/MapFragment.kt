@@ -38,7 +38,7 @@ class MapFragment : Fragment() {
     private var _binding: FragmentMapBinding? = null
     private val binding get() = _binding!!
     private lateinit var fusedLocationClient: FusedLocationProviderClient
-    private lateinit var mapView: MapView
+    private var mapView: MapView? = null
     private var fixedView: View? = null
 
     private val locations = listOf(
@@ -93,7 +93,7 @@ class MapFragment : Fragment() {
                 // 위치 정보 가져오기 성공
                 location?.let {
                     // 지도에 현재 위치 표시
-                    mapView.setMapCenterPointAndZoomLevel(
+                    mapView?.setMapCenterPointAndZoomLevel(
                         MapPoint.mapPointWithGeoCoord(
                             it.latitude,
                             it.longitude
@@ -128,8 +128,8 @@ class MapFragment : Fragment() {
         fixedView = FrameLayout(requireContext()).apply {
             setBackgroundResource(R.drawable.rounded_rectangle_shape)
             layoutParams = FrameLayout.LayoutParams(900, 800).apply {
-                leftMargin = (mapView.width / 2) - 450
-                topMargin = (mapView.height / 2) - 300
+                leftMargin = (mapView?.width ?: 0) / 2 - 450
+                topMargin = (mapView?.height ?: 0) / 2 - 300
             }
         }
 
@@ -216,7 +216,7 @@ class MapFragment : Fragment() {
 
     private fun showCategory(category: String) {
         val results = locations.filter { it.category == category }
-        mapView.removeAllPOIItems() // 기존 마커 제거
+        mapView?.removeAllPOIItems() // 기존 마커 제거
         results.forEach { location ->
             addMarkerAndShowInfo(location)
         }
@@ -230,7 +230,7 @@ class MapFragment : Fragment() {
             selectedMarkerType = MapPOIItem.MarkerType.RedPin
             userObject = location
         }
-        mapView.addPOIItem(marker)
+        mapView?.addPOIItem(marker)
     }
 
     private fun showSearchResults(query: String) {
@@ -242,7 +242,7 @@ class MapFragment : Fragment() {
             .setItems(names) { _, which ->
                 val selectedLocation = results[which]
                 val adjustedLatitude = selectedLocation.latitude - 0.005
-                mapView.setMapCenterPointAndZoomLevel(
+                mapView?.setMapCenterPointAndZoomLevel(
                     MapPoint.mapPointWithGeoCoord(adjustedLatitude, selectedLocation.longitude),
                     DEFAULT_ZOOM_LEVEL.toInt(),
                     true
@@ -258,9 +258,15 @@ class MapFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        // 고정된 뷰가 있다면 제거
+        fixedView?.let {
+            binding.mapView.removeView(it)
+            fixedView = null
+        }
+        mapView?.removeAllPOIItems()
+        binding.mapView.removeView(mapView)  // mapView 뷰를 부모로부터 안전하게 제거
+        mapView = null
         _binding = null
-        // 프래그먼트가 파괴될 때 고정된 뷰가 있다면 제거
-        binding.mapView.removeView(fixedView)
     }
 
     companion object {

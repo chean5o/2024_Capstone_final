@@ -2,9 +2,9 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragment_container1"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/fragment_container1">
+    android:layout_height="match_parent">
 
     <!-- 기존 LinearLayout과 내용은 이 아래에 배치 -->
     <LinearLayout
@@ -36,18 +36,20 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:background="@drawable/button"
+                android:backgroundTint="@drawable/button_color"
                 android:tag="yes1"
-                android:text="예" />
+                android:text="예"
+                android:layout_margin="8dp"/>
 
             <Button
                 android:id="@+id/noButton1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:background="@drawable/button"
+                android:backgroundTint="@drawable/button_color"
                 android:tag="no1"
-                android:text="아니오" />
+                android:text="아니오"
+                android:layout_margin="8dp"/>
 
         </LinearLayout>
 
@@ -56,6 +58,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="다음"
+            android:backgroundTint="@drawable/button_color"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

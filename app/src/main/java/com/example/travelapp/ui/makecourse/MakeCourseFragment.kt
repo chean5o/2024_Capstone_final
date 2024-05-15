@@ -15,6 +15,7 @@ import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.RadioGroup
 import android.widget.Spinner
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.travelapp.R
@@ -82,7 +83,6 @@ class MakeCourseFragment : Fragment() {
                 // 선택된 나이 처리
                 val selectedAge = ageOptions[position]
                 voteResults[6] = selectedAge
-                Toast.makeText(requireContext(), "선택된 나이: $selectedAge", Toast.LENGTH_SHORT).show()
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {
@@ -92,6 +92,7 @@ class MakeCourseFragment : Fragment() {
 
         // Find the RangeSlider instance
         val budgetSlider: RangeSlider = view.findViewById(R.id.budgetSlider)
+        val sliderValueText: TextView = view.findViewById(R.id.sliderValueText)
 
         // Set up a listener for when the user stops sliding
         budgetSlider.addOnSliderTouchListener(object : RangeSlider.OnSliderTouchListener {
@@ -106,8 +107,8 @@ class MakeCourseFragment : Fragment() {
                 // Convert the slider value to a String and store it in the map
                 voteResults[7] = String.format("%,.0f원", value)
 
-                // Display a toast message with the changed value
-                Toast.makeText(context, "${voteResults[7]}으로 변경되었습니다.", Toast.LENGTH_SHORT).show()
+                // Convert the slider values to a String and update the TextView
+                sliderValueText.text = "${String.format("200,000원 - %,.0f원", value)}"
             }
         })
 

@@ -36,7 +36,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:background="@drawable/button"
+                android:backgroundTint="@drawable/button_color"
+                android:layout_margin="8dp"
                 android:tag="yes4"
                 android:text="예" />
 
@@ -45,7 +46,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:background="@drawable/button"
+                android:backgroundTint="@drawable/button_color"
+                android:layout_margin="8dp"
                 android:tag="no4"
                 android:text="아니오" />
         </LinearLayout>
@@ -55,6 +57,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="다음"
+            android:backgroundTint="@drawable/button_color"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
