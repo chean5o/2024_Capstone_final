@@ -38,9 +38,16 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:contentDescription="Search location"
-        android:text="Search"
+        android:text="검색"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.15"/>
 
     <FrameLayout
         android:id="@+id/map_view"
@@ -53,30 +60,60 @@
         app:layout_constraintTop_toBottomOf="@id/search_button" >
 
         <Button
-            android:id="@+id/btnCafe"
-            android:layout_width="51dp"
-            android:layout_height="34dp"
-            android:layout_gravity="top|start"
-            android:layout_marginStart="10dp"
-            android:layout_marginBottom="10dp"
+            android:id="@+id/btnRestaurant"
+            android:layout_width="64dp"
+            android:layout_height="30dp"
+            android:layout_gravity="start"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="10dp"
             android:backgroundTint="#FFFFFF"
-            android:text="카페"
+            android:minHeight="0dp"
+            android:padding="0dp"
+            android:text="음식점"
             android:textColor="#666666"
-            android:textSize="8sp" />
+            android:textSize="11sp" />
+
+
+        <Button
+            android:id="@+id/btnScenic"
+            android:layout_width="64dp"
+            android:layout_height="30dp"
+            android:layout_gravity="start"
+            android:layout_marginStart="90dp"
+            android:layout_marginTop="10dp"
+            android:backgroundTint="#FFFFFF"
+            android:minHeight="0dp"
+            android:padding="0dp"
+            android:text="산책로"
+            android:textColor="#666666"
+            android:textSize="11sp" />
 
         <Button
             android:id="@+id/btnCultural"
-            android:layout_width="51dp"
-            android:layout_height="34dp"
-            android:layout_gravity="top|end"
-            android:layout_marginEnd="10dp"
-            android:layout_marginBottom="10dp"
+            android:layout_width="64dp"
+            android:layout_height="30dp"
+            android:layout_gravity="start"
+            android:layout_marginStart="160dp"
+            android:layout_marginTop="10dp"
             android:backgroundTint="#FFFFFF"
-            android:text="문화"
+            android:minHeight="0dp"
+            android:padding="0dp"
+            android:text="문화시설"
             android:textColor="#666666"
-            android:textSize="8sp" />
+            android:textSize="11sp" />
 
+        <Button
+            android:id="@+id/btnSports"
+            android:layout_width="64dp"
+            android:layout_height="30dp"
+            android:layout_gravity="start"
+            android:layout_marginStart="230dp"
+            android:layout_marginTop="10dp"
+            android:backgroundTint="#FFFFFF"
+            android:minHeight="0dp"
+            android:padding="0dp"
+            android:text="레저시설"
+            android:textColor="#666666"
+            android:textSize="11sp" />
     </FrameLayout>
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>

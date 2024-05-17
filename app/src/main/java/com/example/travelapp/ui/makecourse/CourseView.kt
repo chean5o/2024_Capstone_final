@@ -11,6 +11,7 @@ import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import net.daum.mf.map.api.MapPOIItem
 import net.daum.mf.map.api.MapPoint
 import net.daum.mf.map.api.MapPolyline
 import net.daum.mf.map.api.MapView
@@ -55,6 +56,20 @@ class CourseView : Fragment() {
 
         mapView?.setMapCenterPoint(mapOption, true)
         mapView?.setZoomLevel(mapLevel, true)
+
+        addMarker(originLatitude, originLongitude, "출발지")
+
+        // 목적지 마커 추가
+        val destinationLatitude = 33.49844111
+        val destinationLongitude = 126.4770068
+        addMarker(destinationLatitude, destinationLongitude, "목적지")
+
+        val waypoints = listOf(
+            Pair(33.460234, 126.484023), // 경유지 1
+            Pair(33.470234, 126.494023), // 경유지 2
+            Pair(33.480234, 126.504023)  // 경유지 3
+        )
+        addWaypoints(waypoints)
     }
 
     override fun onDestroyView() {
@@ -63,6 +78,22 @@ class CourseView : Fragment() {
         binding.mapView.removeView(mapView)
         mapView = null
         _binding = null
+    }
+
+    private fun addMarker(latitude: Double, longitude: Double, name: String) {
+        val marker = MapPOIItem().apply {
+            itemName = name
+            mapPoint = MapPoint.mapPointWithGeoCoord(latitude, longitude)
+            markerType = MapPOIItem.MarkerType.BluePin // 마커 타입 설정
+            selectedMarkerType = MapPOIItem.MarkerType.RedPin // 선택된 마커 타입 설정
+        }
+        mapView?.addPOIItem(marker)
+    }
+
+    private fun addWaypoints(waypoints: List<Pair<Double, Double>>) {
+        waypoints.forEachIndexed { index, waypoint ->
+            addMarker(waypoint.first, waypoint.second, "경유지 ${index + 1}")
+        }
     }
 
     private fun MutableList<List<Double>>.toMapPoints(): Array<MapPoint> {
@@ -81,13 +112,14 @@ class CourseView : Fragment() {
                 val restApiKey = "210bc2c33ecbf63c8f1539b7c0d31a4c"
                 val origin = "126.4875563,33.44994698" // 출발지 좌표
                 val destination = "126.4770068,33.49844111" // 목적지 좌표
+                val waypoints = "126.484023,33.460234|126.494023,33.470234|126.504023,33.480234" // 경유지 좌표
 
                 val headers = mapOf(
                     "Authorization" to "KakaoAK $restApiKey",
                     "Content-Type" to "application/json"
                 )
 
-                val queryParams = "origin=$origin&destination=$destination"
+                val queryParams = "origin=$origin&destination=$destination&waypoints=$waypoints"
                 val requestUrl = "https://apis-navi.kakaomobility.com/v1/directions?$queryParams"
                 val url = URL(requestUrl)
                 val connection = url.openConnection() as HttpURLConnection
@@ -120,7 +152,7 @@ class CourseView : Fragment() {
                     val linePath = mutableListOf<List<Double>>()
 
                     route.routes.firstOrNull()?.let { routeInfo ->
-                        routeInfo.sections.firstOrNull()?.let { section ->
+                        routeInfo.sections.forEach { section ->
                             section.roads.forEach { road ->
                                 // 각 road의 vertexes를 순회하면서 중간 지점 추가
                                 for (i in 0 until road.vertexes.size step 2) {
@@ -137,7 +169,7 @@ class CourseView : Fragment() {
                     withContext(Dispatchers.Main) {
                         val polyline = MapPolyline().apply {
                             tag = 0
-                            lineColor = Color.argb(179, 255, 174, 0) // ARGB
+                            lineColor = Color.argb(179, 0, 174, 255) // ARGB
                             addPoints(mapPoints)
                         }
                         mapView?.addPolyline(polyline)

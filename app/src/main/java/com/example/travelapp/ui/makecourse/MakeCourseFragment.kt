@@ -46,7 +46,7 @@ class MakeCourseFragment : Fragment() {
 
         // Retrofit 인스턴스 생성
         val retrofit = Retrofit.Builder()
-            .baseUrl("http://10.0.2.2:5000/") // 본인의 서버 URL로 변경하세요
+            .baseUrl("http://172.30.137.145/") // 본인의 서버 URL로 변경하세요
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
@@ -108,7 +108,7 @@ class MakeCourseFragment : Fragment() {
                 voteResults[7] = String.format("%,.0f원", value)
 
                 // Convert the slider values to a String and update the TextView
-                sliderValueText.text = "${String.format("200,000원 - %,.0f원", value)}"
+                sliderValueText.text = "${String.format("100,000원 - %,.0f원", value)}"
             }
         })
 
