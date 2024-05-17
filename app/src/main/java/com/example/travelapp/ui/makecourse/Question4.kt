@@ -1,6 +1,8 @@
 package com.example.travelapp.ui.makecourse
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +11,7 @@ import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.example.travelapp.DataClass
 import com.example.travelapp.R
 import com.example.travelapp.VoteResult
 import com.example.travelapp.VoteService
@@ -21,6 +24,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 class Question4 : Fragment() {
     private lateinit var voteService: VoteService
     private val voteResults = mutableMapOf<Int, String>()
+    private var fetchedData: List<DataClass>? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,7 +39,7 @@ class Question4 : Fragment() {
 
         // Retrofit 인스턴스 생성 및 초기화
         val retrofit = Retrofit.Builder()
-            .baseUrl("http://172.30.137.145/") // 본인의 서버 URL로 변경하세요
+            .baseUrl("http://172.30.137.145:5000/") // 본인의 서버 URL로 변경하세요
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
@@ -49,7 +53,9 @@ class Question4 : Fragment() {
 
             if (voteResults.size == 1) { // 필요한 질문의 수에 따라 변경 가능
                 sendVoteResults(voteResults)
-                goToQuestionsFragment()
+                Handler(Looper.getMainLooper()).postDelayed({
+                    fetchServerDataAndGoToNextFragment()
+                }, 3000)
             }
             else {
                 Toast.makeText(context, "모든 항목을 선택해주세요.", Toast.LENGTH_LONG).show()
@@ -102,12 +108,40 @@ class Question4 : Fragment() {
             }
         })
     }
+
+    private fun fetchServerDataAndGoToNextFragment() {
+        val call = voteService.getData()
+        call.enqueue(object : Callback<List<DataClass>> {
+            override fun onResponse(
+                call: Call<List<DataClass>>,
+                response: Response<List<DataClass>>
+            ) {
+                if (response.isSuccessful) {
+                    fetchedData = response.body() // 데이터를 변수에 저장
+                    goToQuestionsFragment() // 데이터가 성공적으로 로드된 후에 다음 프래그먼트로 이동
+                } else {
+                    Toast.makeText(context, "데이터를 가져오지 못했습니다.", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onFailure(call: Call<List<DataClass>>, t: Throwable) {
+                Toast.makeText(context, "데이터 가져오기 실패: ${t.message}", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
+
     private fun goToQuestionsFragment() {
         view?.findViewById<LinearLayout>(R.id.linearLayout)?.visibility = View.GONE
 
+        val bundle = Bundle()
+        bundle.putParcelableArrayList("dataList", ArrayList(fetchedData)) // 데이터를 번들에 추가
+
+        val nextFragment = PlaceList()
+        nextFragment.arguments = bundle
+
         requireActivity().supportFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container1, PlaceList())
-            .addToBackStack(null)  // 이전 프래그먼트로 돌아갈 수 있도록 백 스택에 추가
+            .replace(R.id.fragment_container1, nextFragment)
+            .addToBackStack(null)
             .commit()
     }
 }

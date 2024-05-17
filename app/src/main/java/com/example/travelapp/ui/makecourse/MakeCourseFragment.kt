@@ -46,7 +46,7 @@ class MakeCourseFragment : Fragment() {
 
         // Retrofit 인스턴스 생성
         val retrofit = Retrofit.Builder()
-            .baseUrl("http://172.30.137.145/") // 본인의 서버 URL로 변경하세요
+            .baseUrl("http://172.30.137.145:5000/") // 본인의 서버 URL로 변경하세요
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
