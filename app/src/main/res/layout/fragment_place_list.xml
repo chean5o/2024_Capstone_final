@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:id="@+id/fragment_container1">
+
+    <!-- ScrollView 내용이 LinearLayout을 스크롤할 수 있게 설정 -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:id="@+id/linear_layout_places"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <!-- 동적으로 뷰가 추가될 위치 -->
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Button 항상 하단에 위치 -->
+    <Button
+        android:id="@+id/next_button5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="다음"
+        android:backgroundTint="@drawable/button_color"
+        android:layout_marginBottom="56dp"/> <!-- 확인 필요: 색상 리소스가 정확해야 함 -->
+</LinearLayout>

@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/fragment_container1"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- 기존 LinearLayout과 내용은 이 아래에 배치 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="20dp">
+
     <LinearLayout
         android:id="@+id/linearLayout2"
         android:layout_width="match_parent"
@@ -23,7 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:text="질문 1: 도시? 자연?" />
+            android:text="자연 or 도시" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -38,8 +42,9 @@
                 android:layout_weight="1"
                 android:backgroundTint="@drawable/button_color"
                 android:tag="yes1"
-                android:text="예"
-                android:layout_margin="8dp"/>
+                android:text="자연"
+                android:layout_margin="8dp"
+                android:textSize="12sp"/>
 
             <Button
                 android:id="@+id/noButton1"
@@ -48,22 +53,27 @@
                 android:layout_weight="1"
                 android:backgroundTint="@drawable/button_color"
                 android:tag="no1"
-                android:text="아니오"
-                android:layout_margin="8dp"/>
+                android:text="도시"
+                android:layout_margin="8dp"
+                android:textSize="12sp"/>
 
         </LinearLayout>
 
         <Button
             android:id="@+id/next_button1"
-            android:layout_width="match_parent"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:text="다음"
             android:backgroundTint="@drawable/button_color"
+            android:layout_gravity="end"
+            android:layout_marginEnd="8dp"
+            android:text="다음"
+            android:textSize="12sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
     </LinearLayout>
+</LinearLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

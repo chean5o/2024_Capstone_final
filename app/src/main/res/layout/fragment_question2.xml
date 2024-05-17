@@ -6,6 +6,11 @@
     android:layout_height="match_parent"
     android:id="@+id/fragment_container1">
 
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="20dp">
     <LinearLayout
         android:id="@+id/linearLayout3"
         android:layout_width="match_parent"
@@ -21,7 +26,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:text="질문 2: 도시? 자연?" />
+            android:text="휴양/휴식 or 체험활동" />
 
         <LinearLayout
             android:id="@+id/linearLayout4"
@@ -38,7 +43,8 @@
                 android:backgroundTint="@drawable/button_color"
                 android:layout_margin="8dp"
                 android:tag="yes2"
-                android:text="예" />
+                android:text="휴양/휴식"
+                android:textSize="12sp"/>
 
             <Button
                 android:id="@+id/noButton2"
@@ -48,19 +54,24 @@
                 android:backgroundTint="@drawable/button_color"
                 android:layout_margin="8dp"
                 android:tag="no2"
-                android:text="아니오" />
+                android:text="체험활동"
+                android:textSize="12sp"/>
         </LinearLayout>
 
         <Button
             android:id="@+id/next_button2"
-            android:layout_width="match_parent"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:text="다음"
             android:backgroundTint="@drawable/button_color"
+            android:layout_gravity="end"
+            android:layout_marginEnd="8dp"
+            android:text="다음"
+            android:textSize="12sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/linearLayout4" />
+    </LinearLayout>
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
