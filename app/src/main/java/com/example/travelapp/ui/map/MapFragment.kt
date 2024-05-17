@@ -24,15 +24,33 @@ import com.google.android.gms.location.LocationServices
 import net.daum.mf.map.api.MapPOIItem
 import net.daum.mf.map.api.MapPoint
 import net.daum.mf.map.api.MapView
-
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import com.example.travelapp.PlaceService
 data class Location(
     val name: String,
-    val latitude: Double,
-    val longitude: Double,
+    val y_coord: Double, //latitude 위도
+    val x_coord: Double, //longtitude 경도
     val description: String,
-    val category: String // 카테고리 필드 추가
+    val category: Int, // 카테고리 필드 추가
+    val adress: String,
+
 )
 
+object RetrofitClient {
+    private const val BASE_URL = "http://10.0.2.2:3000/"
+
+    val instance: PlaceService by lazy {
+        Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(PlaceService::class.java)
+    }
+}
 class MapFragment : Fragment() {
 
     private var _binding: FragmentMapBinding? = null
@@ -41,6 +59,13 @@ class MapFragment : Fragment() {
     private var mapView: MapView? = null
     private var fixedView: View? = null
 
+//    private val locations = listOf(
+//        Location("Eiffel Tower", 48.8584, 2.2945, "An iconic symbol of Paris.", "문화시설"),
+//        Location("Statue of Liberty", 40.6892, -74.0445, "A gift from France to the United States.", "문화시설"),
+//        Location("남산타워", 37.5512, 126.9882, "A major tourist attraction in Seoul.", "문화시설"),
+//        Location("Cafe de Paris", 48.8534, 2.3488, "Popular tourist cafe in Paris.", "카페"),
+//        Location("Starbucks Seoul", 37.5641, 126.9981, "Busy Starbucks coffee shop in Seoul.", "카페")
+//    )
     private val locations = listOf(
         Location("Eiffel Tower", 48.8584, 2.2945, "An iconic symbol of Paris.", "문화시설"),
         Location("Statue of Liberty", 40.6892, -74.0445, "A gift from France to the United States.", "문화시설"),
@@ -203,6 +228,13 @@ class MapFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        binding.btnCafe.setOnClickListener {
+            showCategory(11) //음식점 , 산책로, 문화, 레저
+        }
+        binding.btnCultural.setOnClickListener {
+            showCategory(3)
+
         binding.btnRestaurant.apply {
             background = ContextCompat.getDrawable(context, R.drawable.rounded_button_background)
             backgroundTintList = null
@@ -268,33 +300,58 @@ class MapFragment : Fragment() {
                 false // ACTION_DOWN 이외의 액션은 처리하지 않음
             }
         }*/
+        //수빈이 코드
+//        binding.searchButton.setOnClickListener {
+//            val query = binding.searchEditText.text.toString()
+//            if (query.isNotEmpty()) {
+//                showSearchResults(query)
+//            } else {
+//                Toast.makeText(requireContext(), "검색어를 입력해주세요", Toast.LENGTH_SHORT).show()
+//            }
+//
+//            // 키보드 숨기기
+//            val inputMethodManager = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+//            inputMethodManager?.hideSoftInputFromWindow(it.windowToken, 0)
+//            binding.searchEditText.clearFocus()
+//        }
         binding.searchButton.setOnClickListener {
-            val query = binding.searchEditText.text.toString()
+            val query = binding.searchEditText.text.toString().trim()
             if (query.isNotEmpty()) {
                 showSearchResults(query)
+                // 키보드 숨기기 및 포커스 제거
+                val inputMethodManager = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+                inputMethodManager?.hideSoftInputFromWindow(it.windowToken, 0)
+                binding.searchEditText.clearFocus()
             } else {
-                Toast.makeText(requireContext(), "검색어를 입력해주세요", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Please enter a search term.", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+    }
+
+    private fun showCategory(category: Int) {
+        RetrofitClient.instance.getPlaces(category.toString()).enqueue(object : Callback<List<Location>> {
+            override fun onResponse(call: Call<List<Location>>, response: Response<List<Location>>) {
+                if (response.isSuccessful) {
+                    val places = response.body()
+                    // 받아온 장소 데이터를 처리하고 지도에 표시하는 로직을 작성합니다.
+                    places?.forEach { location ->
+                        addMarkerAndShowInfo(location)
+                    }
+                } else {
+                    println("Error: ${response.errorBody()?.string()}")
+                }
             }
 
-            // 키보드 숨기기
-            val inputMethodManager = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
-            inputMethodManager?.hideSoftInputFromWindow(it.windowToken, 0)
-            binding.searchEditText.clearFocus()
-        }
+            override fun onFailure(call: Call<List<Location>>, t: Throwable) {
+                println("Failure: ${t.message}")
+            }
+        })
     }
-
-    private fun showCategory(category: String) {
-        val results = locations.filter { it.category == category }
-        mapView?.removeAllPOIItems() // 기존 마커 제거
-        results.forEach { location ->
-            addMarkerAndShowInfo(location)
-        }
-    }
-
     private fun addMarkerAndShowInfo(location: Location) {
         val marker = MapPOIItem().apply {
             itemName = location.name
-            mapPoint = MapPoint.mapPointWithGeoCoord(location.latitude, location.longitude) // 직접 할당
+            mapPoint = MapPoint.mapPointWithGeoCoord(location.y_coord, location.x_coord) // 직접 할당
             markerType = MapPOIItem.MarkerType.BluePin
             selectedMarkerType = MapPOIItem.MarkerType.RedPin
             userObject = location
@@ -303,26 +360,51 @@ class MapFragment : Fragment() {
     }
 
     private fun showSearchResults(query: String) {
-        val results = locations.filter { it.name.contains(query, ignoreCase = true) }
-        val names = results.map { it.name }.toTypedArray()
-
-        val dialog = AlertDialog.Builder(requireContext())
-            .setTitle("Search Results")
-            .setItems(names) { _, which ->
-                val selectedLocation = results[which]
-                val adjustedLatitude = selectedLocation.latitude - 0.005
-                mapView?.setMapCenterPointAndZoomLevel(
-                    MapPoint.mapPointWithGeoCoord(adjustedLatitude, selectedLocation.longitude),
-                    DEFAULT_ZOOM_LEVEL.toInt(),
-                    true
-                )
-                addFixedViewToMap(selectedLocation.name, selectedLocation.description)
-                addMarkerAndShowInfo(selectedLocation) // 마커 추가 및 정보 표시 함수 호출
+//        val results = locations.filter { it.name.contains(query, ignoreCase = true) }
+//        val names = results.map { it.name }.toTypedArray()
+//
+//        val dialog = AlertDialog.Builder(requireContext())
+//            .setTitle("Search Results")
+//            .setItems(names) { _, which ->
+//                val selectedLocation = results[which]
+//                val adjustedLatitude = selectedLocation.latitude - 0.005
+//                mapView?.setMapCenterPointAndZoomLevel(
+//                    MapPoint.mapPointWithGeoCoord(adjustedLatitude, selectedLocation.longitude),
+//                    DEFAULT_ZOOM_LEVEL.toInt(),
+//                    true
+//                )
+//                addFixedViewToMap(selectedLocation.name, selectedLocation.description)
+//                addMarkerAndShowInfo(selectedLocation) // 마커 추가 및 정보 표시 함수 호출
+//            }
+//            .setNegativeButton("Cancel", null)
+//            .create()
+//
+//        dialog.show()
+        RetrofitClient.instance.getPlaceDetails(query).enqueue(object : Callback<Location> {
+            override fun onResponse(call: Call<Location>, response: Response<Location>) {
+                if (response.isSuccessful) {
+                    response.body()?.let { location ->
+                        // 검색된 위치로 지도 중심 이동 및 표시
+                        mapView?.setMapCenterPointAndZoomLevel(
+                            MapPoint.mapPointWithGeoCoord(location.y_coord, location.x_coord),
+                            DEFAULT_ZOOM_LEVEL.toInt(),
+                            true
+                        )
+//                        println("Received: ${it.name}, ${it.address}, Coordinates: (${it.x_coord}, ${it.y_coord})")
+                        addFixedViewToMap(location.name, location.adress)
+                        addMarkerAndShowInfo(location)
+                    } ?: Toast.makeText(context, "No results found.", Toast.LENGTH_SHORT).show()
+                } else {
+                    // 서버 응답은 있으나 성공적이지 않은 경우 (예: 404, 500 등)
+                    Toast.makeText(context, "Error: Server returned an error ${response.code()}", Toast.LENGTH_SHORT).show()
+                }
             }
-            .setNegativeButton("Cancel", null)
-            .create()
 
-        dialog.show()
+            override fun onFailure(call: Call<Location>, t: Throwable) {
+                // 네트워크 요청 실패 (예: 연결 문제, 타임아웃 등)
+                Toast.makeText(context, "Network Error: ${t.message}", Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 
     override fun onDestroyView() {

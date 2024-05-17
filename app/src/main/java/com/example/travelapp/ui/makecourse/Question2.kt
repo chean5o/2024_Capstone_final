@@ -32,12 +32,12 @@ class Question2 : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        // Retrofit 인스턴스 생성 및 초기화
+// Retrofit 인스턴스 생성 및 초기화
         val retrofit = Retrofit.Builder()
             .baseUrl("http://172.30.137.145/") // 본인의 서버 URL로 변경하세요
             .addConverterFactory(GsonConverterFactory.create())
             .build()
+
 
         voteService = retrofit.create(VoteService::class.java)
 
