@@ -1,6 +1,7 @@
 package com.example.travelapp.ui.makecourse
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +13,7 @@ import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.example.travelapp.DataClass
 import com.example.travelapp.R
 import com.example.travelapp.VoteResult
 import com.example.travelapp.VoteService
@@ -21,22 +23,24 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-data class Place(
-    val id: Int,
-    val name: String,
-    val description: String
-)
-
 class PlaceList : Fragment() {
     private lateinit var linearLayout: LinearLayout
-    private val selectedSpinnerValues = HashMap<Int, String>()
+    private val selectedSpinnerValues = HashMap<String, String>()
     private lateinit var voteService: VoteService
-    private val voteResults = mutableMapOf<Int, String>()
+    private val voteResults = mutableMapOf<String, String>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_place_list, container, false)
         linearLayout = view.findViewById(R.id.linear_layout_places)
-        populatePlaceViews()
+
+        // dataList를 가져와 populatePlaceViews에 전달
+        val dataList: List<DataClass>? = arguments?.getParcelableArrayList("dataList")
+        if (dataList != null) {
+            populatePlaceViews(dataList)
+        } else {
+            Log.e("PlaceList", "No data received")
+        }
+
         return view
     }
 
@@ -87,79 +91,63 @@ class PlaceList : Fragment() {
         return true
     }
 
-    private fun populatePlaceViews() {
-        val places = getPlaces()
+    private fun populatePlaceViews(places: List<DataClass>) {
         places.forEach { place ->
             val layoutInflater = LayoutInflater.from(context)
             val placeView = layoutInflater.inflate(R.layout.item_place, linearLayout, false)
 
             // 스피너와 관련된 TextView 설정
-            val nameTextView: TextView = placeView.findViewById(R.id.nameTextView)
-            val descriptionTextView: TextView = placeView.findViewById(R.id.descriptionTextView)
+            val areaTextView: TextView = placeView.findViewById(R.id.nameTextView)
+            val priceTextView: TextView = placeView.findViewById(R.id.descriptionTextView)
             val spinner: Spinner = placeView.findViewById(R.id.placeSpinner)
 
             // 장소 이름과 설명 설정
-            nameTextView.text = place.name
-            descriptionTextView.text = place.description
+            areaTextView.text = place.AREA
+            priceTextView.text = place.price_x
 
-            setupSpinner(spinner, place.id)
+            setupSpinner(spinner, place.AREA)
             linearLayout.addView(placeView)
         }
     }
 
 
-    private fun setupSpinner(spinner: Spinner, placeId: Int) {
+    private fun setupSpinner(spinner: Spinner, placeArea: String) {
         val adapter = ArrayAdapter.createFromResource(
             requireContext(),
-            R.array.place_options, // 배열에는 '선택하세요', '1', '2', ... , '9'가 포함되어야 합니다.
+            R.array.place_options,
             android.R.layout.simple_spinner_item
         ).also { adapter ->
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             spinner.adapter = adapter
         }
 
-        spinner.setSelection(0)  // '선택하세요'를 기본 선택으로 설정
+        spinner.setSelection(0)
 
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
                 val selectedOption = parent.getItemAtPosition(position).toString()
 
                 if (position == 0) {
-                    selectedSpinnerValues.remove(placeId)
+                    selectedSpinnerValues.remove(placeArea)
                 } else {
                     // 중복 선택 검사
                     if (selectedSpinnerValues.containsValue(selectedOption)) {
                         Toast.makeText(context, "이미 선택된 옵션입니다.", Toast.LENGTH_SHORT).show()
                         spinner.setSelection(0)  // 다시 '선택하세요'로 리셋
                     } else {
-                        selectedSpinnerValues[placeId] = selectedOption
+                        selectedSpinnerValues[placeArea] = selectedOption
                     }
                 }
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {
-                selectedSpinnerValues.remove(placeId)
+                selectedSpinnerValues.remove(placeArea)
             }
         }
     }
 
-    private fun getPlaces(): List<Place> {
-        // Simulate fetching data from a server or database
-        return listOf(
-            Place(1, "Place One", "Description One"),
-            Place(2, "Place Two", "Description Two"),
-            Place(3, "Place Three", "Description Three"),
-            Place(4, "Place Four", "Description Four"),
-            Place(5, "Place Five", "Description Five"),
-            Place(6, "Place Six", "Description Six"),
-            Place(7, "Place Seven", "Description Seven"),
-            Place(8, "Place Eight", "Description Eight"),
-            Place(9, "Place Nine", "Description Nine")
-        )
-    }
-
-    private fun sendVoteResults(voteResults: MutableMap<Int, String>) {
-        val voteResultsList = voteResults.map { VoteResult(it.key, it.value) }
+    private fun sendVoteResults(voteResults: HashMap<String, String>) {
+        val voteResultsList = voteResults.map { VoteResult(it.key.toInt(), it.value) }
         val call = voteService.sendVoteResults(voteResultsList)
         call.enqueue(object : Callback<Void> {
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
