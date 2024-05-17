@@ -59,25 +59,19 @@ class MapFragment : Fragment() {
     private var mapView: MapView? = null
     private var fixedView: View? = null
 
+
 //    private val locations = listOf(
 //        Location("Eiffel Tower", 48.8584, 2.2945, "An iconic symbol of Paris.", "문화시설"),
 //        Location("Statue of Liberty", 40.6892, -74.0445, "A gift from France to the United States.", "문화시설"),
 //        Location("남산타워", 37.5512, 126.9882, "A major tourist attraction in Seoul.", "문화시설"),
 //        Location("Cafe de Paris", 48.8534, 2.3488, "Popular tourist cafe in Paris.", "카페"),
-//        Location("Starbucks Seoul", 37.5641, 126.9981, "Busy Starbucks coffee shop in Seoul.", "카페")
+//        Location("Starbucks Seoul", 37.5641, 126.9981, "Busy Starbucks coffee shop in Seoul.", "카페"),
+//        Location("Hallasan Mountain", 33.3617, 126.5292, "The highest mountain in South Korea, located in Jeju.", "문화시설"),
+//        Location("Seongsan Ilchulbong", 33.4581, 126.9426, "Volcanic cone with a huge crater, popular for sunrise views.", "레저시설"),
+//        Location("Jeongbang Waterfall", 33.2411, 126.5594, "A waterfall that falls directly into the sea, a unique feature in Jeju.", "음식점"),
+//        Location("Osulloc Tea Museum", 33.3058, 126.2895, "Museum dedicated to Korean tea culture, located in Jeju.", "문화시설"),
+//        Location("Manjanggul Cave", 33.5281, 126.7717, "One of the finest lava tunnels in the world, found in Jeju.", "산책로")
 //    )
-    private val locations = listOf(
-        Location("Eiffel Tower", 48.8584, 2.2945, "An iconic symbol of Paris.", "문화시설"),
-        Location("Statue of Liberty", 40.6892, -74.0445, "A gift from France to the United States.", "문화시설"),
-        Location("남산타워", 37.5512, 126.9882, "A major tourist attraction in Seoul.", "문화시설"),
-        Location("Cafe de Paris", 48.8534, 2.3488, "Popular tourist cafe in Paris.", "카페"),
-        Location("Starbucks Seoul", 37.5641, 126.9981, "Busy Starbucks coffee shop in Seoul.", "카페"),
-        Location("Hallasan Mountain", 33.3617, 126.5292, "The highest mountain in South Korea, located in Jeju.", "문화시설"),
-        Location("Seongsan Ilchulbong", 33.4581, 126.9426, "Volcanic cone with a huge crater, popular for sunrise views.", "레저시설"),
-        Location("Jeongbang Waterfall", 33.2411, 126.5594, "A waterfall that falls directly into the sea, a unique feature in Jeju.", "음식점"),
-        Location("Osulloc Tea Museum", 33.3058, 126.2895, "Museum dedicated to Korean tea culture, located in Jeju.", "문화시설"),
-        Location("Manjanggul Cave", 33.5281, 126.7717, "One of the finest lava tunnels in the world, found in Jeju.", "산책로")
-    )
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -115,7 +109,7 @@ class MapFragment : Fragment() {
                     val location = poiItem.userObject as? Location
                     if (location != null) {
                         // 선택된 마커의 추가 정보를 표시
-                        val message = "Name: ${location.name}\nAddress: ${location.latitude}, ${location.longitude}\nDescription: ${location.description}"
+                        val message = "Name: ${location.name}\nAddress: ${location.y_coord}, ${location.x_coord}\nDescription: ${location.adress}"
                         Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
                     }
                 }
@@ -229,11 +223,11 @@ class MapFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.btnCafe.setOnClickListener {
-            showCategory(11) //음식점 , 산책로, 문화, 레저
-        }
-        binding.btnCultural.setOnClickListener {
-            showCategory(3)
+//        binding.btnCafe.setOnClickListener {
+//            showCategory(11) //음식점 , 산책로, 문화, 레저
+//        }
+//        binding.btnCultural.setOnClickListener {
+//            showCategory(3)
 
         binding.btnRestaurant.apply {
             background = ContextCompat.getDrawable(context, R.drawable.rounded_button_background)
@@ -243,7 +237,7 @@ class MapFragment : Fragment() {
 
             // 클릭 리스너 설정
             setOnClickListener {
-                showCategory("음식점")
+                showCategory(11)
             }
         }
         binding.btnScenic.apply {
@@ -254,7 +248,7 @@ class MapFragment : Fragment() {
 
             // 클릭 리스너 설정
             setOnClickListener {
-                showCategory("산책로")
+                showCategory(7)
             }
         }
         binding.btnCultural.apply {
@@ -265,7 +259,7 @@ class MapFragment : Fragment() {
 
             // 클릭 리스너 설정
             setOnClickListener {
-                showCategory("문화시설")
+                showCategory(3)
             }
         }
         binding.btnSports.apply {
@@ -276,7 +270,7 @@ class MapFragment : Fragment() {
 
             // 클릭 리스너 설정
             setOnClickListener {
-                showCategory("레저시설")
+                showCategory(5)
             }
         }
 
@@ -330,7 +324,7 @@ class MapFragment : Fragment() {
     }
 
     private fun showCategory(category: Int) {
-        RetrofitClient.instance.getPlaces(category.toString()).enqueue(object : Callback<List<Location>> {
+        RetrofitClient.instance.getPlaces(category).enqueue(object : Callback<List<Location>> {
             override fun onResponse(call: Call<List<Location>>, response: Response<List<Location>>) {
                 if (response.isSuccessful) {
                     val places = response.body()
