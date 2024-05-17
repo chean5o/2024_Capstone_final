@@ -1,6 +1,5 @@
 package com.example.travelapp.ui.map
 import android.Manifest
-import android.app.AlertDialog
 import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Color
@@ -17,6 +16,7 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import com.example.travelapp.PlaceService
 import com.example.travelapp.R
 import com.example.travelapp.databinding.FragmentMapBinding
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -29,7 +29,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import com.example.travelapp.PlaceService
+
 data class Location(
     val name: String,
     val y_coord: Double, //latitude 위도
@@ -41,7 +41,7 @@ data class Location(
 )
 
 object RetrofitClient {
-    private const val BASE_URL = "http://10.0.2.2:3000/"
+    private const val BASE_URL = "http://192.168.50.164:3000/"
 
     val instance: PlaceService by lazy {
         Retrofit.Builder()

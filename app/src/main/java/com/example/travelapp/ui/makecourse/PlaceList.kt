@@ -14,9 +14,9 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.travelapp.DataClass
+import com.example.travelapp.PlaceResults
+import com.example.travelapp.PlaceService
 import com.example.travelapp.R
-import com.example.travelapp.VoteResult
-import com.example.travelapp.VoteService
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -25,9 +25,8 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class PlaceList : Fragment() {
     private lateinit var linearLayout: LinearLayout
-    private val selectedSpinnerValues = HashMap<String, String>()
-    private lateinit var voteService: VoteService
-    private val voteResults = mutableMapOf<String, String>()
+    private val selectedSpinnerValues = HashMap<String, Pair<DataClass, Int>>()
+    private lateinit var voteService: PlaceService
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_place_list, container, false)
@@ -48,45 +47,30 @@ class PlaceList : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val retrofit = Retrofit.Builder()
-            .baseUrl("http://10.0.2.2:5000/") // 본인의 서버 URL로 변경하세요
+            .baseUrl("http://192.168.50.164:3000/") // 본인의 서버 URL로 변경하세요
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
-        voteService = retrofit.create(VoteService::class.java)
+        voteService = retrofit.create(PlaceService::class.java)
 
         // 버튼 찾기 및 클릭 리스너 설정
         val startQuestionsButton = view.findViewById<Button>(R.id.next_button5)
         startQuestionsButton.setOnClickListener {
-            if (selectedSpinnerValues.size >= 5 && isSequential(selectedSpinnerValues.values.toList())) {
-                sendVoteResults(selectedSpinnerValues)
+            if (selectedSpinnerValues.size >= 5 && isSequential(selectedSpinnerValues.values.map { it.second })) {
+                sendPlaceResults(selectedSpinnerValues)
                 goToQuestionsFragment()
             } else {
                 Toast.makeText(context, "적어도 5개의 스피너에서 1부터 순서대로 선택해야 합니다.", Toast.LENGTH_LONG).show()
             }
         }
-
-        /*startQuestionsButton.setOnClickListener {
-            Log.d("MakeCourseFragment", "Next button clicked")
-            goToQuestionsFragment()
-
-            if (voteResults.size > 4) { // 필요한 질문의 수에 따라 변경 가능
-                sendVoteResults(voteResults)
-                goToQuestionsFragment()
-            }
-            else {
-                Toast.makeText(context, "방문 장소를 5개 이상 선택해주세요.", Toast.LENGTH_LONG).show()
-            }
-        }*/
     }
 
-    private fun isSequential(selectedValues: List<String>): Boolean {
+    private fun isSequential(selectedValues: List<Int>): Boolean {
         // 선택된 값들을 정렬
         val sortedValues = selectedValues.sorted()
-        // '선택하세요' 제거
-        val filteredValues = sortedValues.filterNot { it == "선택하세요" }
         // 순서대로 선택되었는지 검사
-        for (i in filteredValues.indices) {
-            if (filteredValues[i] != (i + 1).toString()) return false
+        for (i in sortedValues.indices) {
+            if (sortedValues[i] != (i + 1)) return false
         }
         return true
     }
@@ -105,13 +89,12 @@ class PlaceList : Fragment() {
             areaTextView.text = place.AREA
             priceTextView.text = place.price_x
 
-            setupSpinner(spinner, place.AREA)
+            setupSpinner(spinner, place)
             linearLayout.addView(placeView)
         }
     }
 
-
-    private fun setupSpinner(spinner: Spinner, placeArea: String) {
+    private fun setupSpinner(spinner: Spinner, place: DataClass) {
         val adapter = ArrayAdapter.createFromResource(
             requireContext(),
             R.array.place_options,
@@ -128,38 +111,34 @@ class PlaceList : Fragment() {
                 val selectedOption = parent.getItemAtPosition(position).toString()
 
                 if (position == 0) {
-                    selectedSpinnerValues.remove(placeArea)
+                    selectedSpinnerValues.remove(place.AREA)
                 } else {
-                    // 중복 선택 검사
-                    if (selectedSpinnerValues.containsValue(selectedOption)) {
-                        Toast.makeText(context, "이미 선택된 옵션입니다.", Toast.LENGTH_SHORT).show()
-                        spinner.setSelection(0)  // 다시 '선택하세요'로 리셋
-                    } else {
-                        selectedSpinnerValues[placeArea] = selectedOption
-                    }
+                    val selectedNumber = selectedOption.toInt()
+                    selectedSpinnerValues[place.AREA] = Pair(place, selectedNumber)
                 }
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {
-                selectedSpinnerValues.remove(placeArea)
+                selectedSpinnerValues.remove(place.AREA)
             }
         }
     }
 
-    private fun sendVoteResults(voteResults: HashMap<String, String>) {
-        val voteResultsList = voteResults.map { VoteResult(it.key.toInt(), it.value) }
-        val call = voteService.sendVoteResults(voteResultsList)
+    private fun sendPlaceResults(selectedValues: HashMap<String, Pair<DataClass, Int>>) {
+        val placeResultsList = selectedValues.values.map { PlaceResults(it.first.AREA, it.first.X_COORD_x, it.first.Y_COORD_x) }
+        val call = voteService.sendPlaceResults(placeResultsList)
         call.enqueue(object : Callback<Void> {
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
                 if (response.isSuccessful) {
-                    //Toast.makeText(context, "투표 결과가 성공적으로 전송되었습니다.", Toast.LENGTH_SHORT).show()
+                    Log.d("PlaceList", "Place results successfully sent")
                 } else {
-                    //Toast.makeText(context, "투표 결과 전송.", Toast.LENGTH_SHORT).show()
+                    Log.d("PlaceList", "Failed to send place results")
                 }
             }
 
             override fun onFailure(call: Call<Void>, t: Throwable) {
-                Toast.makeText(context, "투표 결과 전송 중 오류가 발생했습니다: ${t.message}", Toast.LENGTH_SHORT).show()
+                Log.e("PlaceList", "Error sending place results: ${t.message}")
+                Toast.makeText(context, "데이터 전송 중 오류가 발생했습니다: ${t.message}", Toast.LENGTH_SHORT).show()
             }
         })
     }
