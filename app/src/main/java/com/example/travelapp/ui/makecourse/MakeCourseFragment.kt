@@ -15,6 +15,7 @@ import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.RadioGroup
 import android.widget.Spinner
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.travelapp.R
@@ -43,12 +44,6 @@ class MakeCourseFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val startQuestionsButton = view.findViewById<Button>(R.id.next_button)
-        startQuestionsButton.setOnClickListener {
-            Log.d("MakeCourseFragment", "Next button clicked")
-            goToQuestionsFragment()
-        }
-
         // Retrofit 인스턴스 생성
         val retrofit = Retrofit.Builder()
             .baseUrl("http://10.0.2.2:5000/") // 본인의 서버 URL로 변경하세요
@@ -58,6 +53,21 @@ class MakeCourseFragment : Fragment() {
         val voteService = retrofit.create(VoteService::class.java)
 
         val voteResults = mutableMapOf<Int, String>()
+
+        val startQuestionsButton = view.findViewById<Button>(R.id.next_button)
+        startQuestionsButton.setOnClickListener {
+            Log.d("MakeCourseFragment", "Next button clicked")
+
+            // 투표 결과의 크기가 3이면 투표 결과를 전송
+            if (voteResults.size == 3) {
+                // 투표 결과가 3개 이상일 때만 투표 결과를 전송하고 다음 프래그먼트로 이동
+                sendVoteResults(voteResults, voteService)
+                goToQuestionsFragment()
+            } else {
+                // 사용자에게 더 많은 입력이 필요하다고 알림
+                Toast.makeText(context, "모든 항목을 선택해주세요.", Toast.LENGTH_LONG).show()
+            }
+        }
 
         val ageSpinner = view.findViewById<Spinner>(R.id.ageSpinner)
         // 10년 단위 나이 옵션 리스트 생성
@@ -73,7 +83,6 @@ class MakeCourseFragment : Fragment() {
                 // 선택된 나이 처리
                 val selectedAge = ageOptions[position]
                 voteResults[6] = selectedAge
-                Toast.makeText(requireContext(), "선택된 나이: $selectedAge", Toast.LENGTH_SHORT).show()
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {
@@ -83,6 +92,7 @@ class MakeCourseFragment : Fragment() {
 
         // Find the RangeSlider instance
         val budgetSlider: RangeSlider = view.findViewById(R.id.budgetSlider)
+        val sliderValueText: TextView = view.findViewById(R.id.sliderValueText)
 
         // Set up a listener for when the user stops sliding
         budgetSlider.addOnSliderTouchListener(object : RangeSlider.OnSliderTouchListener {
@@ -97,32 +107,8 @@ class MakeCourseFragment : Fragment() {
                 // Convert the slider value to a String and store it in the map
                 voteResults[7] = String.format("%,.0f원", value)
 
-                // Display a toast message with the changed value
-                Toast.makeText(context, "${voteResults[7]}으로 변경되었습니다.", Toast.LENGTH_SHORT).show()
-
-                if (voteResults.size == 3) {
-                    sendVoteResults(voteResults, voteService)
-                }
-            }
-        })
-
-        val biasSlider: RangeSlider = view.findViewById(R.id.biasSlider)
-
-        // Set up a listener for when the user stops sliding
-        biasSlider.addOnSliderTouchListener(object : RangeSlider.OnSliderTouchListener {
-            override fun onStartTrackingTouch(slider: RangeSlider) {
-                // 사용자가 슬라이더 조작을 시작할 때 실행될 코드 (필요한 경우)
-            }
-
-            override fun onStopTrackingTouch(slider: RangeSlider) {
-                // 사용자가 슬라이더 조작을 마쳤을 때 실행될 코드
-                val value = slider.values[0] // 첫 번째 값을 가져옵니다. RangeSlider의 경우 범위를 가지므로, 필요에 따라 적절하게 값을 선택하세요.
-
-                // Convert the slider value to a String and store it in the map
-                voteResults[8] = String.format("%,.0f퍼센트", value)
-
-                // Display a toast message with the changed value
-                Toast.makeText(context, "${voteResults[8]}로 변경되었습니다.", Toast.LENGTH_SHORT).show()
+                // Convert the slider values to a String and update the TextView
+                sliderValueText.text = "${String.format("200,000원 - %,.0f원", value)}"
             }
         })
 
@@ -137,27 +123,6 @@ class MakeCourseFragment : Fragment() {
                 }
             }
         }
-
-        // 투표 결과를 저장할 MutableMap 생성
-//        val voteResults = mutableMapOf<Int, String>()
-        // 버튼 클릭 리스너 설정
-        /*val buttonIds = listOf(R.id.yesButton1, R.id.noButton1, R.id.yesButton2, R.id.noButton2, R.id.yesButton3, R.id.noButton3, R.id.yesButton4, R.id.noButton4)
-        buttonIds.forEach { id ->
-            view.findViewById<Button>(id).setOnClickListener { buttonView ->
-                val answer = if (buttonView.tag.toString().startsWith("yes")) "Y" else "N"
-                val questionId = buttonView.tag.toString().filter { it.isDigit() }.toInt()
-                Log.d("MakeCourseFragment", "Button clicked: Question ID $questionId, Answer $answer")
-                voteResults[questionId] = answer
-
-                Toast.makeText(context, "질문 $questionId: $answer 선택됨", Toast.LENGTH_SHORT).show()
-
-                // 모든 질문에 대한 응답이 완료되었는지 확인
-//                if (voteResults.size == buttonIds.size / 2) { // 4개의 질문에 대한 답변이 모두 있어야 함
-                if (voteResults.size == 6) {
-                    sendVoteResults(voteResults, voteService)
-                }
-            }
-        }*/
     }
 
     private fun sendVoteResults(voteResults: MutableMap<Int, String>, voteService: VoteService) {

@@ -24,22 +24,26 @@ class CourseView : Fragment() {
 
     private var _binding: FragmentCourseViewBinding? = null
     private val binding get() = _binding!!
-    private lateinit var mapView: MapView
+    private var mapView: MapView? = null
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
+        inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentCourseViewBinding.inflate(inflater, container, false)
-        return binding.root
+        val root: View = binding.root
+
+        mapView = MapView(requireContext())
+        binding.mapView.addView(mapView)
+
+        return root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mapView = MapView(requireContext())
+        /*mapView = MapView(requireContext())
         binding.mapView.addView(mapView)
-
+*/
         // API 호출을 수행하는 함수 호출
         getCarDirection()
 
@@ -49,14 +53,16 @@ class CourseView : Fragment() {
         val mapOption = MapPoint.mapPointWithGeoCoord(originLatitude, originLongitude)
         val mapLevel = 3 // 지도의 확대 레벨
 
-        mapView.setMapCenterPoint(mapOption, true)
-        mapView.setZoomLevel(mapLevel, true)
+        mapView?.setMapCenterPoint(mapOption, true)
+        mapView?.setZoomLevel(mapLevel, true)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        _binding = null
+    override fun onDestroyView() {
+        super.onDestroyView()
+        mapView?.removeAllPOIItems()
         binding.mapView.removeView(mapView)
+        mapView = null
+        _binding = null
     }
 
     private fun MutableList<List<Double>>.toMapPoints(): Array<MapPoint> {
@@ -134,7 +140,7 @@ class CourseView : Fragment() {
                             lineColor = Color.argb(179, 255, 174, 0) // ARGB
                             addPoints(mapPoints)
                         }
-                        mapView.addPolyline(polyline)
+                        mapView?.addPolyline(polyline)
                     }
 
                 } else {

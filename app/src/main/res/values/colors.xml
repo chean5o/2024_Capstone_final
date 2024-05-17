@@ -9,4 +9,6 @@
     <color name="white">#FFFFFFFF</color>
     <color name="green">#9EAE72</color>
     <color name="gray">#BCBCBC</color>
+    <color name="press_button">#9EAE72</color>
+    <color name="button">#B6C296</color>
 </resources>

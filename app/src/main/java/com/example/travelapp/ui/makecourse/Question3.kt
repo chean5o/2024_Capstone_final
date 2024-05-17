@@ -32,12 +32,6 @@ class Question3 : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val startQuestionsButton = view.findViewById<Button>(R.id.next_button3)
-        startQuestionsButton.setOnClickListener {
-            Log.d("MakeCourseFragment", "Next button clicked")
-            goToQuestionsFragment()
-        }
-
         // Retrofit 인스턴스 생성 및 초기화
         val retrofit = Retrofit.Builder()
             .baseUrl("http://10.0.2.2:5000/") // 본인의 서버 URL로 변경하세요
@@ -47,20 +41,44 @@ class Question3 : Fragment() {
         voteService = retrofit.create(VoteService::class.java)
 
         setupButtonListeners()
+
+        val startQuestionsButton = view.findViewById<Button>(R.id.next_button3)
+        startQuestionsButton.setOnClickListener {
+            Log.d("MakeCourseFragment", "Next button clicked")
+
+            if (voteResults.size == 1) { // 필요한 질문의 수에 따라 변경 가능
+                sendVoteResults(voteResults)
+                goToQuestionsFragment()
+            }
+            else {
+                Toast.makeText(context, "모든 항목을 선택해주세요.", Toast.LENGTH_LONG).show()
+            }
+        }
     }
 
     private fun setupButtonListeners() {
         val buttonIds = listOf(R.id.yesButton3, R.id.noButton3)
         buttonIds.forEach { id ->
-            view?.findViewById<Button>(id)?.setOnClickListener { buttonView ->
-                val answer = if (buttonView.tag.toString().startsWith("yes")) "Y" else "N"
-                val questionId = buttonView.tag.toString().filter { it.isDigit() }.toInt()
-                voteResults[questionId] = answer
+            view?.findViewById<Button>(id)?.let { button ->
+                button.setOnClickListener { buttonView ->
+                    // 모든 버튼의 선택 상태를 해제
+                    buttonIds.forEach { otherId ->
+                        if (otherId != id) { // 현재 클릭된 버튼을 제외한 다른 버튼
+                            val otherButton = view?.findViewById<Button>(otherId)
+                            otherButton?.isSelected = false
+                        }
+                    }
 
-                Toast.makeText(context, "질문 $questionId: $answer 선택됨", Toast.LENGTH_SHORT).show()
+                    // 현재 클릭된 버튼의 선택 상태를 활성화
+                    buttonView.isSelected = true
 
-                if (voteResults.size == 1) {
-                    sendVoteResults(voteResults)
+                    // 선택된 상태에 따라 데이터 저장
+                    val isYesButton = id == R.id.yesButton3
+                    val answer = if (isYesButton) "Y" else "N"
+                    val questionId = buttonView.tag.toString().filter { it.isDigit() }.toInt()
+                    voteResults[questionId] = answer
+
+                    //Toast.makeText(context, "질문 $questionId: $answer 선택됨", Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -72,9 +90,9 @@ class Question3 : Fragment() {
         call.enqueue(object : Callback<Void> {
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
                 if (response.isSuccessful) {
-                    Toast.makeText(context, "투표 결과가 성공적으로 전송되었습니다.", Toast.LENGTH_SHORT).show()
+                    //Toast.makeText(context, "투표 결과가 성공적으로 전송되었습니다.", Toast.LENGTH_SHORT).show()
                 } else {
-                    Toast.makeText(context, "투표 결과 전송.", Toast.LENGTH_SHORT).show()
+                    //Toast.makeText(context, "투표 결과 전송.", Toast.LENGTH_SHORT).show()
                 }
             }
 
