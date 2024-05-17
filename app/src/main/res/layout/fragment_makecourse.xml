@@ -96,12 +96,12 @@
                 android:stepSize="10000"
                 android:valueFrom="100000"
                 android:valueTo="300000"
-                app:haloColor="@color/orange"
+                app:haloColor="@color/button"
                 app:labelBehavior="withinBounds"
-                app:thumbIcon="@color/orange"
-                app:tickColorActive="@color/orange"
-                app:tickColorInactive="@color/orange"
-                app:trackColor="@color/orange" />
+                app:thumbColor="@color/press_button"
+                app:tickColorActive="@color/button"
+                app:tickColorInactive="@color/button"
+                app:trackColor="@color/button"/>
         </LinearLayout>
 
         <Button

@@ -83,32 +83,6 @@ class MapFragment : Fragment() {
         mapView = MapView(requireContext())
         binding.mapView.addView(mapView)
 
-        mapView?.setPOIItemEventListener(object : MapView.POIItemEventListener {
-            override fun onPOIItemSelected(mapView: MapView?, poiItem: MapPOIItem?) {
-                // 마커가 선택되었을 때 호출되는 함수
-                if (poiItem != null) {
-                    val location = poiItem.userObject as? Location
-                    if (location != null) {
-                        // 선택된 마커의 추가 정보를 표시
-                        val message = "Name: ${location.name}\nAddress: ${location.latitude}, ${location.longitude}\nDescription: ${location.description}"
-                        Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
-                    }
-                }
-            }
-
-            override fun onCalloutBalloonOfPOIItemTouched(mapView: MapView?, poiItem: MapPOIItem?) {
-                // Callout balloon 터치 시 호출되는 함수 (필요하면 구현)
-            }
-
-            override fun onDraggablePOIItemMoved(mapView: MapView?, poiItem: MapPOIItem?, mapPoint: MapPoint?) {
-                // 드래그 가능한 POI 아이템이 이동되었을 때 호출되는 함수 (필요하면 구현)
-            }
-
-            override fun onCalloutBalloonOfPOIItemTouched(mapView: MapView?, poiItem: MapPOIItem?, buttonType: MapPOIItem.CalloutBalloonButtonType?) {
-                // 콜아웃 버튼 클릭 시 호출되는 함수 (필요 없으면 생략 가능)
-            }
-        })
-
         return root
     }
 
