@@ -1,5 +1,6 @@
 package com.example.travelapp.ui.makecourse
 
+import PlaceResults
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -14,12 +15,8 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.travelapp.DataClass
-import com.example.travelapp.PlaceResults
 import com.example.travelapp.PlaceService
 import com.example.travelapp.R
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -56,11 +53,12 @@ class PlaceList : Fragment() {
         // 버튼 찾기 및 클릭 리스너 설정
         val startQuestionsButton = view.findViewById<Button>(R.id.next_button5)
         startQuestionsButton.setOnClickListener {
-            if (selectedSpinnerValues.size >= 5 && isSequential(selectedSpinnerValues.values.map { it.second })) {
-                sendPlaceResults(selectedSpinnerValues)
+            val selectedValues = selectedSpinnerValues.values.map { it.second }
+            if (selectedValues.size >= 5 && isSequential(selectedValues)) {
+                //sendPlaceResults(selectedSpinnerValues)
                 goToQuestionsFragment()
             } else {
-                Toast.makeText(context, "적어도 5개의 스피너에서 1부터 순서대로 선택해야 합니다.", Toast.LENGTH_LONG).show()
+                Toast.makeText(context, "5개 이상의 장소를 방문할 순서대로 1부터 선택해야 합니다.", Toast.LENGTH_LONG).show()
             }
         }
     }
@@ -114,7 +112,14 @@ class PlaceList : Fragment() {
                     selectedSpinnerValues.remove(place.AREA)
                 } else {
                     val selectedNumber = selectedOption.toInt()
-                    selectedSpinnerValues[place.AREA] = Pair(place, selectedNumber)
+
+                    // Check for duplicates
+                    if (selectedSpinnerValues.values.any { it.second == selectedNumber }) {
+                        Toast.makeText(context, "이미 선택된 값입니다.", Toast.LENGTH_SHORT).show()
+                        spinner.setSelection(0) // Reset to default
+                    } else {
+                        selectedSpinnerValues[place.AREA] = Pair(place, selectedNumber)
+                    }
                 }
             }
 
@@ -124,7 +129,7 @@ class PlaceList : Fragment() {
         }
     }
 
-    private fun sendPlaceResults(selectedValues: HashMap<String, Pair<DataClass, Int>>) {
+/*    private fun sendPlaceResults(selectedValues: HashMap<String, Pair<DataClass, Int>>) {
         val placeResultsList = selectedValues.values.map { PlaceResults(it.first.AREA, it.first.X_COORD_x, it.first.Y_COORD_x) }
         val call = voteService.sendPlaceResults(placeResultsList)
         call.enqueue(object : Callback<Void> {
@@ -141,14 +146,26 @@ class PlaceList : Fragment() {
                 Toast.makeText(context, "데이터 전송 중 오류가 발생했습니다: ${t.message}", Toast.LENGTH_SHORT).show()
             }
         })
-    }
+    }*/
 
     private fun goToQuestionsFragment() {
         view?.findViewById<LinearLayout>(R.id.linear_layout_places)?.visibility = View.GONE
         view?.findViewById<Button>(R.id.next_button5)?.visibility = View.GONE
 
+        val placeResultsList = selectedSpinnerValues.values.sortedBy { it.second }.map {
+            PlaceResults(it.first.AREA, it.first.X_COORD_x, it.first.Y_COORD_x)
+        }
+
+        val bundle = Bundle().apply {
+            putParcelableArrayList("selectedPlaces", ArrayList(placeResultsList))
+        }
+
+        val questionsFragment = CourseView().apply {
+            arguments = bundle
+        }
+
         requireActivity().supportFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container1, CourseView())
+            .replace(R.id.fragment_container1, questionsFragment)
             .addToBackStack(null)  // 이전 프래그먼트로 돌아갈 수 있도록 백 스택에 추가
             .commit()
     }
