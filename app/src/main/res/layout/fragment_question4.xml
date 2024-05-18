@@ -26,7 +26,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:text="사진 촬영 중요도" />
+            android:text="잘 알려진 장소 or 알려지지 않은 장소" />
 
         <LinearLayout
             android:id="@+id/linearLayout6"
@@ -42,8 +42,8 @@
                 android:layout_weight="1"
                 android:backgroundTint="@drawable/button_color"
                 android:layout_margin="8dp"
-                android:tag="yes4"
-                android:text="중요하다"
+                android:tag="yes3"
+                android:text="잘 알려진 장소"
                 android:textSize="10sp"/>
 
             <Button
@@ -53,8 +53,8 @@
                 android:layout_weight="1"
                 android:backgroundTint="@drawable/button_color"
                 android:layout_margin="8dp"
-                android:tag="no4"
-                android:text="중요하지 않다"
+                android:tag="no3"
+                android:text="알려지지 않은 장소"
                 android:textSize="10sp"/>
         </LinearLayout>
 

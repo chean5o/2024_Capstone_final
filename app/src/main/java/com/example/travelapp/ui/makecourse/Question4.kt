@@ -39,7 +39,7 @@ class Question4 : Fragment() {
 
         // Retrofit 인스턴스 생성 및 초기화
         val retrofit = Retrofit.Builder()
-            .baseUrl("http://192.168.50.34:5000/") // 본인의 서버 URL로 변경하세요
+            .baseUrl("http://192.168.50.164:5000/") // 본인의 서버 URL로 변경하세요
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
@@ -55,7 +55,7 @@ class Question4 : Fragment() {
                 sendVoteResults(voteResults)
                 Handler(Looper.getMainLooper()).postDelayed({
                     fetchServerDataAndGoToNextFragment()
-                }, 3000)
+                }, 7000)
             }
             else {
                 Toast.makeText(context, "모든 항목을 선택해주세요.", Toast.LENGTH_LONG).show()
