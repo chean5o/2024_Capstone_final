@@ -36,7 +36,7 @@ data class Location(
     val x_coord: Double, //longtitude 경도
     val description: String,
     val category: Int, // 카테고리 필드 추가
-    val adress: String,
+    val address: String,
 
 )
 
@@ -59,19 +59,6 @@ class MapFragment : Fragment() {
     private var mapView: MapView? = null
     private var fixedView: View? = null
 
-
-//    private val locations = listOf(
-//        Location("Eiffel Tower", 48.8584, 2.2945, "An iconic symbol of Paris.", "문화시설"),
-//        Location("Statue of Liberty", 40.6892, -74.0445, "A gift from France to the United States.", "문화시설"),
-//        Location("남산타워", 37.5512, 126.9882, "A major tourist attraction in Seoul.", "문화시설"),
-//        Location("Cafe de Paris", 48.8534, 2.3488, "Popular tourist cafe in Paris.", "카페"),
-//        Location("Starbucks Seoul", 37.5641, 126.9981, "Busy Starbucks coffee shop in Seoul.", "카페"),
-//        Location("Hallasan Mountain", 33.3617, 126.5292, "The highest mountain in South Korea, located in Jeju.", "문화시설"),
-//        Location("Seongsan Ilchulbong", 33.4581, 126.9426, "Volcanic cone with a huge crater, popular for sunrise views.", "레저시설"),
-//        Location("Jeongbang Waterfall", 33.2411, 126.5594, "A waterfall that falls directly into the sea, a unique feature in Jeju.", "음식점"),
-//        Location("Osulloc Tea Museum", 33.3058, 126.2895, "Museum dedicated to Korean tea culture, located in Jeju.", "문화시설"),
-//        Location("Manjanggul Cave", 33.5281, 126.7717, "One of the finest lava tunnels in the world, found in Jeju.", "산책로")
-//    )
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -144,7 +131,7 @@ class MapFragment : Fragment() {
         )
     }
 
-    private fun addFixedViewToMap(name: String, description: String) {
+    private fun addFixedViewToMap(name: String, address: String) {
         fixedView?.let {
             binding.mapView.removeView(it)
             fixedView = null
@@ -158,7 +145,7 @@ class MapFragment : Fragment() {
         }
 
         val infoTextView = TextView(requireContext()).apply {
-            text = "$name\n$description"
+            text = "$name\n$address"
             textSize = 16f
             setTextColor(Color.BLACK)
             gravity = Gravity.CENTER
@@ -248,26 +235,6 @@ class MapFragment : Fragment() {
             }
         }
 
-        /*mapView.setOnTouchListener { _, event ->
-            if (event.action == MotionEvent.ACTION_DOWN) {
-                // 맵의 너비와 높이에 대한 중앙 좌표 계산
-                val centerX = mapView.width / 2f
-                val centerY = mapView.height / 2f
-
-                // 클릭된 위치가 중앙의 일정 범위 내에 있는지 확인
-                if (Math.abs(event.x - centerX) < 100 && Math.abs(event.y - centerY) < 100) {
-                    mapView.post {
-                        // 중앙 근처에서 클릭되었을 때만 뷰 추가
-                        addFixedViewToMap(centerX, mapView.height * 0.65f)
-                    }
-                    true // 이벤트 처리 완료
-                } else {
-                    false // 다른 지점 클릭시 이벤트 무시
-                }
-            } else {
-                false // ACTION_DOWN 이외의 액션은 처리하지 않음
-            }
-        }*/
         //수빈이 코드
 //        binding.searchButton.setOnClickListener {
 //            val query = binding.searchEditText.text.toString()
@@ -291,7 +258,7 @@ class MapFragment : Fragment() {
                 inputMethodManager?.hideSoftInputFromWindow(it.windowToken, 0)
                 binding.searchEditText.clearFocus()
             } else {
-                Toast.makeText(requireContext(), "Please enter a search term.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "찾고싶은 장소를 입력해주세요.", Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -328,28 +295,8 @@ class MapFragment : Fragment() {
     }
 
     private fun showSearchResults(query: String) {
-//        val results = locations.filter { it.name.contains(query, ignoreCase = true) }
-//        val names = results.map { it.name }.toTypedArray()
-//
-//        val dialog = AlertDialog.Builder(requireContext())
-//            .setTitle("Search Results")
-//            .setItems(names) { _, which ->
-//                val selectedLocation = results[which]
-//                val adjustedLatitude = selectedLocation.latitude - 0.005
-//                mapView?.setMapCenterPointAndZoomLevel(
-//                    MapPoint.mapPointWithGeoCoord(adjustedLatitude, selectedLocation.longitude),
-//                    DEFAULT_ZOOM_LEVEL.toInt(),
-//                    true
-//                )
-//                addFixedViewToMap(selectedLocation.name, selectedLocation.description)
-//                addMarkerAndShowInfo(selectedLocation) // 마커 추가 및 정보 표시 함수 호출
-//            }
-//            .setNegativeButton("Cancel", null)
-//            .create()
-//
-//        dialog.show()
-        RetrofitClient.instance.getPlaceDetails(query).enqueue(object : Callback<Location> {
-            override fun onResponse(call: Call<Location>, response: Response<Location>) {
+        RetrofitClient.instance.getPlaceDetails(query).enqueue(object : Callback<List<Location>> {
+            override fun onResponse(call: Call<List<Location>>, response: Response<List<Location>>) {
                 if (response.isSuccessful) {
                     response.body()?.let { location ->
                         // 검색된 위치로 지도 중심 이동 및 표시
@@ -359,7 +306,7 @@ class MapFragment : Fragment() {
                             true
                         )
 //                        println("Received: ${it.name}, ${it.address}, Coordinates: (${it.x_coord}, ${it.y_coord})")
-                        addFixedViewToMap(location.name, location.adress)
+                        addFixedViewToMap(location.name, location.address)
                         addMarkerAndShowInfo(location)
                     } ?: Toast.makeText(context, "No results found.", Toast.LENGTH_SHORT).show()
                 } else {
@@ -368,7 +315,7 @@ class MapFragment : Fragment() {
                 }
             }
 
-            override fun onFailure(call: Call<Location>, t: Throwable) {
+            override fun onFailure(call: Call<List<Location>>, t: Throwable) {
                 // 네트워크 요청 실패 (예: 연결 문제, 타임아웃 등)
                 Toast.makeText(context, "Network Error: ${t.message}", Toast.LENGTH_SHORT).show()
             }
