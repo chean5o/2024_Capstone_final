@@ -1,6 +1,8 @@
 package com.example.travelapp.ui.makecourse
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -34,7 +36,7 @@ class Question3 : Fragment() {
 
         // Retrofit 인스턴스 생성 및 초기화
         val retrofit = Retrofit.Builder()
-            .baseUrl("http://172.30.137.145/") // 본인의 서버 URL로 변경하세요
+            .baseUrl("http://172.30.137.145:5000/") // 본인의 서버 URL로 변경하세요
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
@@ -48,7 +50,9 @@ class Question3 : Fragment() {
 
             if (voteResults.size == 1) { // 필요한 질문의 수에 따라 변경 가능
                 sendVoteResults(voteResults)
-                goToQuestionsFragment()
+                Handler(Looper.getMainLooper()).postDelayed({
+                    goToQuestionsFragment()
+                }, 3000)
             }
             else {
                 Toast.makeText(context, "모든 항목을 선택해주세요.", Toast.LENGTH_LONG).show()
