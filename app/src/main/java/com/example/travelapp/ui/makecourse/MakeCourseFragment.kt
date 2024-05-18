@@ -46,7 +46,7 @@ class MakeCourseFragment : Fragment() {
 
         // Retrofit 인스턴스 생성
         val retrofit = Retrofit.Builder()
-            .baseUrl("http://172.30.137.145:5000/") // 본인의 서버 URL로 변경하세요
+            .baseUrl("http://192.168.50.34:5000/") // 본인의 서버 URL로 변경하세요
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
@@ -132,9 +132,9 @@ class MakeCourseFragment : Fragment() {
         call.enqueue(object : Callback<Void> {
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
                 if (response.isSuccessful) {
-                    Toast.makeText(context, "투표 결과가 성공적으로 전송되었습니다.", Toast.LENGTH_SHORT).show()
+                    //Toast.makeText(context, "투표 결과가 성공적으로 전송되었습니다.", Toast.LENGTH_SHORT).show()
                 } else {
-                    Toast.makeText(context, "투표 결과가 성공적으로 전송.", Toast.LENGTH_SHORT).show()
+                    //Toast.makeText(context, "투표 결과가 성공적으로 전송.", Toast.LENGTH_SHORT).show()
                 }
             }
 

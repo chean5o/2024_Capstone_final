@@ -44,7 +44,7 @@
                 android:layout_margin="8dp"
                 android:tag="yes2"
                 android:text="휴양/휴식"
-                android:textSize="12sp"/>
+                android:textSize="10sp"/>
 
             <Button
                 android:id="@+id/noButton2"
@@ -55,7 +55,7 @@
                 android:layout_margin="8dp"
                 android:tag="no2"
                 android:text="체험활동"
-                android:textSize="12sp"/>
+                android:textSize="10sp"/>
         </LinearLayout>
 
         <Button
@@ -66,7 +66,7 @@
             android:layout_gravity="end"
             android:layout_marginEnd="8dp"
             android:text="다음"
-            android:textSize="12sp"
+            android:textSize="10sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

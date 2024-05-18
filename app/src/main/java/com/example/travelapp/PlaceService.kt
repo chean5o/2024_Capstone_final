@@ -1,8 +1,8 @@
 package com.example.travelapp
-import retrofit2.Call
-import retrofit2.http.*
-import retrofit2.http.GET
 import com.example.travelapp.ui.map.Location
+import retrofit2.Call
+import retrofit2.http.GET
+import retrofit2.http.Path
 
 interface PlaceService {
     @GET("/find_map/{name}")

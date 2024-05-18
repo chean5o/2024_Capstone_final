@@ -44,7 +44,7 @@
                 android:tag="yes1"
                 android:text="자연"
                 android:layout_margin="8dp"
-                android:textSize="12sp"/>
+                android:textSize="10sp"/>
 
             <Button
                 android:id="@+id/noButton1"
@@ -55,7 +55,7 @@
                 android:tag="no1"
                 android:text="도시"
                 android:layout_margin="8dp"
-                android:textSize="12sp"/>
+                android:textSize="10sp"/>
 
         </LinearLayout>
 
@@ -67,7 +67,7 @@
             android:layout_gravity="end"
             android:layout_marginEnd="8dp"
             android:text="다음"
-            android:textSize="12sp"
+            android:textSize="10sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

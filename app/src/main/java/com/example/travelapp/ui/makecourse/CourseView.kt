@@ -1,4 +1,5 @@
 package com.example.travelapp.ui.makecourse
+import PlaceResults
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -26,6 +27,7 @@ class CourseView : Fragment() {
     private var _binding: FragmentCourseViewBinding? = null
     private val binding get() = _binding!!
     private var mapView: MapView? = null
+    private var selectedPlaces: List<PlaceResults>? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,6 +39,8 @@ class CourseView : Fragment() {
         mapView = MapView(requireContext())
         binding.mapView.addView(mapView)
 
+        selectedPlaces = arguments?.getParcelableArrayList("selectedPlaces")
+
         return root
     }
 
@@ -45,31 +49,25 @@ class CourseView : Fragment() {
         /*mapView = MapView(requireContext())
         binding.mapView.addView(mapView)
 */
+
         // API 호출을 수행하는 함수 호출
         getCarDirection()
 
-        // 출발지 근처로 맵 뷰 설정
-        val originLatitude = 33.44994698
-        val originLongitude = 126.4875563
-        val mapOption = MapPoint.mapPointWithGeoCoord(originLatitude, originLongitude)
-        val mapLevel = 3 // 지도의 확대 레벨
+        selectedPlaces?.let {
+            it.forEachIndexed { index, place ->
+                val latitude = place.yCoord.toDouble()
+                val longitude = place.xCoord.toDouble()
+                addMarker(latitude, longitude, "${index + 1}. ${place.area}")
+            }
 
-        mapView?.setMapCenterPoint(mapOption, true)
-        mapView?.setZoomLevel(mapLevel, true)
-
-        addMarker(originLatitude, originLongitude, "출발지")
-
-        // 목적지 마커 추가
-        val destinationLatitude = 33.49844111
-        val destinationLongitude = 126.4770068
-        addMarker(destinationLatitude, destinationLongitude, "목적지")
-
-        val waypoints = listOf(
-            Pair(33.460234, 126.484023), // 경유지 1
-            Pair(33.470234, 126.494023), // 경유지 2
-            Pair(33.480234, 126.504023)  // 경유지 3
-        )
-        addWaypoints(waypoints)
+            // 맵 중심을 첫 번째 장소로 설정
+            if (it.isNotEmpty()) {
+                val firstPlace = it[0]
+                val mapPoint = MapPoint.mapPointWithGeoCoord(firstPlace.yCoord.toDouble(), firstPlace.xCoord.toDouble())
+                mapView?.setMapCenterPoint(mapPoint, true)
+                mapView?.setZoomLevel(3, true)
+            }
+        }
     }
 
     override fun onDestroyView() {
@@ -84,16 +82,10 @@ class CourseView : Fragment() {
         val marker = MapPOIItem().apply {
             itemName = name
             mapPoint = MapPoint.mapPointWithGeoCoord(latitude, longitude)
-            markerType = MapPOIItem.MarkerType.BluePin // 마커 타입 설정
-            selectedMarkerType = MapPOIItem.MarkerType.RedPin // 선택된 마커 타입 설정
+            markerType = MapPOIItem.MarkerType.BluePin
+            selectedMarkerType = MapPOIItem.MarkerType.RedPin
         }
         mapView?.addPOIItem(marker)
-    }
-
-    private fun addWaypoints(waypoints: List<Pair<Double, Double>>) {
-        waypoints.forEachIndexed { index, waypoint ->
-            addMarker(waypoint.first, waypoint.second, "경유지 ${index + 1}")
-        }
     }
 
     private fun MutableList<List<Double>>.toMapPoints(): Array<MapPoint> {
@@ -110,16 +102,16 @@ class CourseView : Fragment() {
         lifecycleScope.launch(Dispatchers.IO) {
             try {
                 val restApiKey = "210bc2c33ecbf63c8f1539b7c0d31a4c"
-                val origin = "126.4875563,33.44994698" // 출발지 좌표
-                val destination = "126.4770068,33.49844111" // 목적지 좌표
-                val waypoints = "126.484023,33.460234|126.494023,33.470234|126.504023,33.480234" // 경유지 좌표
+                val origin = selectedPlaces?.getOrNull(0)?.let { "${it.xCoord},${it.yCoord}" } ?: ""
+                val destination = selectedPlaces?.lastOrNull()?.let { "${it.xCoord},${it.yCoord}" } ?: ""
+                val waypoints = selectedPlaces?.drop(1)?.dropLast(1)?.joinToString("|") { "${it.xCoord},${it.yCoord}" } ?: ""
 
                 val headers = mapOf(
                     "Authorization" to "KakaoAK $restApiKey",
                     "Content-Type" to "application/json"
                 )
 
-                val queryParams = "origin=$origin&destination=$destination&waypoints=$waypoints"
+                val queryParams = "origin=$origin&destination=$destination&waypoints=$waypoints&priority=DISTANCE"
                 val requestUrl = "https://apis-navi.kakaomobility.com/v1/directions?$queryParams"
                 val url = URL(requestUrl)
                 val connection = url.openConnection() as HttpURLConnection

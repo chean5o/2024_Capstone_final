@@ -43,7 +43,7 @@
                 android:layout_margin="8dp"
                 android:tag="yes3"
                 android:text="잘 알려진 장소"
-                android:textSize="12sp"/>
+                android:textSize="10sp"/>
 
             <Button
                 android:id="@+id/noButton3"
@@ -54,7 +54,7 @@
                 android:layout_margin="8dp"
                 android:tag="no3"
                 android:text="알려지지 않은 장소"
-                android:textSize="12sp"/>
+                android:textSize="10sp"/>
         </LinearLayout>
 
         <Button
@@ -65,7 +65,7 @@
             android:layout_gravity="end"
             android:layout_marginEnd="8dp"
             android:text="다음"
-            android:textSize="12sp"
+            android:textSize="10sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
