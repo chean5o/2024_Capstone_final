@@ -30,18 +30,22 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
+import android.os.Parcelable
+import android.widget.LinearLayout
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
 data class Location(
     val name: String,
-    val y_coord: Double, //latitude 위도
-    val x_coord: Double, //longtitude 경도
+    val y_coord: Double, // latitude 위도
+    val x_coord: Double, // longitude 경도
     val description: String,
     val category: Int, // 카테고리 필드 추가
-    val address: String,
-
-)
+    val address: String
+) : Parcelable
 
 object RetrofitClient {
-    private const val BASE_URL = "http://192.168.50.164:3000/"
+    private const val BASE_URL = "http://192.168.50.34:3000/"
 
     val instance: PlaceService by lazy {
         Retrofit.Builder()
@@ -58,6 +62,7 @@ class MapFragment : Fragment() {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private var mapView: MapView? = null
     private var fixedView: View? = null
+    private val currentMarkers = mutableListOf<MapPOIItem>()
 
 
     override fun onCreateView(
@@ -265,6 +270,9 @@ class MapFragment : Fragment() {
     }
 
     private fun showCategory(category: Int) {
+        mapView?.removePOIItems(currentMarkers.toTypedArray())
+        currentMarkers.clear()
+
         RetrofitClient.instance.getPlaces(category).enqueue(object : Callback<List<Location>> {
             override fun onResponse(call: Call<List<Location>>, response: Response<List<Location>>) {
                 if (response.isSuccessful) {
@@ -292,35 +300,46 @@ class MapFragment : Fragment() {
             userObject = location
         }
         mapView?.addPOIItem(marker)
+        currentMarkers.add(marker)
     }
 
     private fun showSearchResults(query: String) {
         RetrofitClient.instance.getPlaceDetails(query).enqueue(object : Callback<List<Location>> {
             override fun onResponse(call: Call<List<Location>>, response: Response<List<Location>>) {
                 if (response.isSuccessful) {
-                    response.body()?.let { location ->
-                        // 검색된 위치로 지도 중심 이동 및 표시
-                        mapView?.setMapCenterPointAndZoomLevel(
-                            MapPoint.mapPointWithGeoCoord(location.y_coord, location.x_coord),
-                            DEFAULT_ZOOM_LEVEL.toInt(),
-                            true
-                        )
-//                        println("Received: ${it.name}, ${it.address}, Coordinates: (${it.x_coord}, ${it.y_coord})")
-                        addFixedViewToMap(location.name, location.address)
-                        addMarkerAndShowInfo(location)
-                    } ?: Toast.makeText(context, "No results found.", Toast.LENGTH_SHORT).show()
+                    response.body()?.let { locations ->
+                        if (locations.isNotEmpty()) {
+                            // 검색 결과가 있을 때
+                            val bundle = Bundle().apply {
+                                putParcelableArrayList("locations", ArrayList(locations))
+                            }
+                            val fragment = SearchResultFragment().apply {
+                                arguments = bundle
+                            }
+                            mapView?.removeAllPOIItems()
+                            binding.mapView.removeView(mapView)  // mapView 뷰를 부모로부터 안전하게 제거
+                            mapView = null
+                            view?.findViewById<FrameLayout>(R.id.map_view)?.visibility = View.GONE
+                            parentFragmentManager.beginTransaction()
+                                .replace(R.id.fragment_container, fragment)
+                                .addToBackStack(null)
+                                .commit()
+                        } else {
+                            Toast.makeText(context, "No results found.", Toast.LENGTH_SHORT).show()
+                        }
+                    }
                 } else {
-                    // 서버 응답은 있으나 성공적이지 않은 경우 (예: 404, 500 등)
                     Toast.makeText(context, "Error: Server returned an error ${response.code()}", Toast.LENGTH_SHORT).show()
                 }
             }
 
             override fun onFailure(call: Call<List<Location>>, t: Throwable) {
-                // 네트워크 요청 실패 (예: 연결 문제, 타임아웃 등)
                 Toast.makeText(context, "Network Error: ${t.message}", Toast.LENGTH_SHORT).show()
             }
         })
     }
+
+
 
     override fun onDestroyView() {
         super.onDestroyView()
