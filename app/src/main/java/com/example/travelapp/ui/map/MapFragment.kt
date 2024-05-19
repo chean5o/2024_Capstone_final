@@ -44,11 +44,17 @@ data class Location(
     val y_coord: Double, // latitude 위도
     val x_coord: Double, // longitude 경도
     val category: Int, // 카테고리 필드 추가
-    val adress: String
+    val address: String,
+    val star: Double,
+    val service_rv: String,
+    val significant_rv: String,
+    val time_rv: String,
+    val traffic_rv: String,
+    val tot_rv: String
 ) : Parcelable
 
 object RetrofitClient {
-    private const val BASE_URL = "http://192.168.50.34:3000/"
+    private const val BASE_URL = "http://192.168.50.109:3000/"
 
     val instance: PlaceService by lazy {
         Retrofit.Builder()
@@ -151,7 +157,7 @@ class MapFragment : Fragment() {
         )
     }
 
-    private fun addFixedViewToMap(name: String, address: String) {
+    private fun addFixedViewToMap(name: String, address: String, service: String, significant: String, time: String, traffic: String, tot_review: String, star: Double) {
         // 기존의 뷰를 제거하고 새로운 LinearLayout을 설정합니다.
         fixedView?.let {
             binding.mapView.removeView(it)
@@ -159,10 +165,16 @@ class MapFragment : Fragment() {
         }
         val inflater = LayoutInflater.from(context)
         fixedView = inflater.inflate(R.layout.fixed_view, binding.mapView, false).apply {
-            findViewById<TextView>(R.id.infoTextView).text = "$name"
+            findViewById<TextView>(R.id.infoTextView).text = "$name    $star"
             findViewById<TextView>(R.id.addressTextView).text = "$address"
-            val imageView = findViewById<ImageView>(R.id.imageView)  // ImageView 찾기
-            loadImageIntoImageView(imageView)  // 이미지 로드 및 설정
+            findViewById<TextView>(R.id.additionalTextView).text = "서비스: $service"
+            findViewById<TextView>(R.id.additionalTextView2).text = "특이사항: $significant"
+            findViewById<TextView>(R.id.additionalTextView3).text = "시간: $time"
+            findViewById<TextView>(R.id.additionalTextView4).text = "교통: $traffic"
+            findViewById<TextView>(R.id.additionalTextView5).text = "전체: $tot_review"
+
+            val imageView = findViewById<ImageView>(R.id.imageView11)  // ImageView 찾기
+            loadImageIntoImageView(context, imageView, name)  // 이미지 로드 및 설정
 
             findViewById<ImageView>(R.id.closeButton).setOnClickListener {
                 binding.mapView.removeView(fixedView)
@@ -184,25 +196,27 @@ class MapFragment : Fragment() {
         binding.mapView.addView(fixedView)
     }
 
-    private fun loadImageIntoImageView(imageView: ImageView) {
-        RetrofitClient.instance.getImageUrl().enqueue(object : Callback<ResponseBody> {
+    private fun loadImageIntoImageView(context: Context, imageView: ImageView, imageName: String) {
+        RetrofitClient.instance.ImageData(imageName).enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 if (response.isSuccessful) {
-                    response.body()?.byteStream()?.let { inputStream ->
+                    response.body()?.let { responseBody ->
+                        val inputStream = responseBody.byteStream()
                         val bitmap = BitmapFactory.decodeStream(inputStream)
-                        activity?.runOnUiThread {
-                            imageView.setImageBitmap(bitmap)
-                        }
+                        imageView.setImageBitmap(bitmap)
                     }
                 } else {
-                    Log.e("API Error", "Response not successful")
+                    // Handle the case where the response is not successful
+                    Toast.makeText(context, "Failed to load image", Toast.LENGTH_SHORT).show()
                 }
             }
 
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                Log.e("API Error", "Network error", t)
+                // Handle failure to connect to the server or other errors
+                Toast.makeText(context, "Error: ${t.message}", Toast.LENGTH_SHORT).show()
             }
         })
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -309,6 +323,7 @@ class MapFragment : Fragment() {
     }
 
     private fun showCategory(category: Int) {
+        mapView?.removeAllPOIItems()
         RetrofitClient.instance.getPlaces(category).enqueue(object : Callback<List<Location>> {
             override fun onResponse(call: Call<List<Location>>, response: Response<List<Location>>) {
                 if (response.isSuccessful) {
@@ -362,7 +377,7 @@ class MapFragment : Fragment() {
                                     DEFAULT_ZOOM_LEVEL.toInt(),
                                     true
                                 )
-                                addFixedViewToMap(selectedLocation.name, selectedLocation.adress)
+                                addFixedViewToMap(selectedLocation.name, selectedLocation.address, selectedLocation.service_rv, selectedLocation.significant_rv, selectedLocation.time_rv, selectedLocation.traffic_rv, selectedLocation.tot_rv, selectedLocation.star)
                                 addMarkerAndShowInfo(selectedLocation) // 마커 추가 및 정보 표시 함수 호출
                             }
                             .setNegativeButton("Cancel", null)
