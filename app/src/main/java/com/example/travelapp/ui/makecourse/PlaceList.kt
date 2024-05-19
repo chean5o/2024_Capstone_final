@@ -53,11 +53,13 @@ class PlaceList : Fragment() {
             // 스피너와 관련된 TextView 설정
             val areaTextView: TextView = placeView.findViewById(R.id.nameTextView)
             val priceTextView: TextView = placeView.findViewById(R.id.descriptionTextView)
+            val reviewTextView: TextView = placeView.findViewById(R.id.reviewTextView)
             val spinner: Spinner = placeView.findViewById(R.id.placeSpinner)
 
             // 장소 이름과 설명 설정
             areaTextView.text = place.AREA
-            priceTextView.text = place.price_x
+            priceTextView.text = "평균 금액: ${place.price_x}원"
+            reviewTextView.text = place.tot_review_x
 
             setupSpinner(spinner, place)
             linearLayout.addView(placeView)
