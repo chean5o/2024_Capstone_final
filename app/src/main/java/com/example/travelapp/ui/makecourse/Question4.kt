@@ -55,7 +55,7 @@ class Question4 : Fragment() {
                 sendVoteResults(voteResults)
                 Handler(Looper.getMainLooper()).postDelayed({
                     fetchServerDataAndGoToNextFragment()
-                }, 7000)
+                }, 10000)
             }
             else {
                 Toast.makeText(context, "모든 항목을 선택해주세요.", Toast.LENGTH_LONG).show()

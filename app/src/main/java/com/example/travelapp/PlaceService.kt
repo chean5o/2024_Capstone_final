@@ -1,8 +1,8 @@
 package com.example.travelapp
-import com.example.travelapp.ui.map.Location
 import retrofit2.Call
+import retrofit2.http.*
 import retrofit2.http.GET
-import retrofit2.http.Path
+import com.example.travelapp.ui.map.Location
 import okhttp3.ResponseBody
 
 interface PlaceService {

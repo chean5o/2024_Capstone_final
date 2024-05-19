@@ -129,24 +129,24 @@ class PlaceList : Fragment() {
         }
     }
 
-/*    private fun sendPlaceResults(selectedValues: HashMap<String, Pair<DataClass, Int>>) {
-        val placeResultsList = selectedValues.values.map { PlaceResults(it.first.AREA, it.first.X_COORD_x, it.first.Y_COORD_x) }
-        val call = voteService.sendPlaceResults(placeResultsList)
-        call.enqueue(object : Callback<Void> {
-            override fun onResponse(call: Call<Void>, response: Response<Void>) {
-                if (response.isSuccessful) {
-                    Log.d("PlaceList", "Place results successfully sent")
-                } else {
-                    Log.d("PlaceList", "Failed to send place results")
+    /*    private fun sendPlaceResults(selectedValues: HashMap<String, Pair<DataClass, Int>>) {
+            val placeResultsList = selectedValues.values.map { PlaceResults(it.first.AREA, it.first.X_COORD_x, it.first.Y_COORD_x) }
+            val call = voteService.sendPlaceResults(placeResultsList)
+            call.enqueue(object : Callback<Void> {
+                override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                    if (response.isSuccessful) {
+                        Log.d("PlaceList", "Place results successfully sent")
+                    } else {
+                        Log.d("PlaceList", "Failed to send place results")
+                    }
                 }
-            }
 
-            override fun onFailure(call: Call<Void>, t: Throwable) {
-                Log.e("PlaceList", "Error sending place results: ${t.message}")
-                Toast.makeText(context, "데이터 전송 중 오류가 발생했습니다: ${t.message}", Toast.LENGTH_SHORT).show()
-            }
-        })
-    }*/
+                override fun onFailure(call: Call<Void>, t: Throwable) {
+                    Log.e("PlaceList", "Error sending place results: ${t.message}")
+                    Toast.makeText(context, "데이터 전송 중 오류가 발생했습니다: ${t.message}", Toast.LENGTH_SHORT).show()
+                }
+            })
+        }*/
 
     private fun goToQuestionsFragment() {
         view?.findViewById<LinearLayout>(R.id.linear_layout_places)?.visibility = View.GONE

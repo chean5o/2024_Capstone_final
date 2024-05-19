@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:id="@+id/fragment_container1">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:id="@+id/fragment_container1">
 
     <!-- 예산을 위한 슬라이더 추가 -->
-<!--        <ScrollView-->
-<!--            android:id="@+id/scrollView"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="0dp"-->
-<!--            android:layout_marginTop="50dp"-->
-<!--            android:layout_marginBottom="80dp"-->
-<!--            app:layout_constraintBottom_toBottomOf="parent"-->
-<!--            app:layout_constraintEnd_toEndOf="parent"-->
-<!--            app:layout_constraintStart_toStartOf="parent"-->
-<!--            app:layout_constraintTop_toTopOf="parent">-->
+    <!--        <ScrollView-->
+    <!--            android:id="@+id/scrollView"-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="0dp"-->
+    <!--            android:layout_marginTop="50dp"-->
+    <!--            android:layout_marginBottom="80dp"-->
+    <!--            app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--            app:layout_constraintEnd_toEndOf="parent"-->
+    <!--            app:layout_constraintStart_toStartOf="parent"-->
+    <!--            app:layout_constraintTop_toTopOf="parent">-->
     <LinearLayout
         android:id="@+id/del"
         android:layout_width="match_parent"
@@ -116,40 +116,40 @@
 
 
     <!--    <LinearLayout-->
-        <!--        android:layout_width="match_parent"-->
-        <!--        android:layout_height="wrap_content"-->
-        <!--        android:orientation="vertical"-->
-        <!--        android:background="@drawable/shadow"-->
-        <!--        android:padding="16dp">-->
-        <!--        &lt;!&ndash; 질문 1 &ndash;&gt;-->
-        <!--        <TextView-->
-        <!--            android:layout_width="wrap_content"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:text="질문 1: 도시? 자연?"-->
-        <!--            android:layout_marginBottom="8dp"/>-->
-        <!--        <LinearLayout-->
-        <!--            android:layout_width="match_parent"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:orientation="horizontal"-->
-        <!--            android:layout_marginBottom="16dp">-->
-        <!--            &lt;!&ndash;        android:background="@drawable/box">&ndash;&gt;-->
-        <!--            <Button-->
-        <!--                android:id="@+id/yesButton4"-->
-        <!--                android:layout_width="0dp"-->
-        <!--                android:layout_height="wrap_content"-->
-        <!--                android:layout_weight="1"-->
-        <!--                android:text="예"-->
-        <!--                android:background="@drawable/button"-->
-        <!--                android:tag="yes1"/>-->
-        <!--            <Button-->
-        <!--                android:id="@+id/noButton4"-->
-        <!--                android:layout_width="0dp"-->
-        <!--                android:layout_height="wrap_content"-->
-        <!--                android:layout_weight="1"-->
-        <!--                android:text="아니오"-->
-        <!--                android:background="@drawable/button"-->
-        <!--                android:tag="no1"/>-->
-        <!--        </LinearLayout>-->
-        <!--    </LinearLayout>-->
-<!--        </ScrollView>-->
-    </LinearLayout>
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:orientation="vertical"-->
+    <!--        android:background="@drawable/shadow"-->
+    <!--        android:padding="16dp">-->
+    <!--        &lt;!&ndash; 질문 1 &ndash;&gt;-->
+    <!--        <TextView-->
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:text="질문 1: 도시? 자연?"-->
+    <!--            android:layout_marginBottom="8dp"/>-->
+    <!--        <LinearLayout-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:orientation="horizontal"-->
+    <!--            android:layout_marginBottom="16dp">-->
+    <!--            &lt;!&ndash;        android:background="@drawable/box">&ndash;&gt;-->
+    <!--            <Button-->
+    <!--                android:id="@+id/yesButton4"-->
+    <!--                android:layout_width="0dp"-->
+    <!--                android:layout_height="wrap_content"-->
+    <!--                android:layout_weight="1"-->
+    <!--                android:text="예"-->
+    <!--                android:background="@drawable/button"-->
+    <!--                android:tag="yes1"/>-->
+    <!--            <Button-->
+    <!--                android:id="@+id/noButton4"-->
+    <!--                android:layout_width="0dp"-->
+    <!--                android:layout_height="wrap_content"-->
+    <!--                android:layout_weight="1"-->
+    <!--                android:text="아니오"-->
+    <!--                android:background="@drawable/button"-->
+    <!--                android:tag="no1"/>-->
+    <!--        </LinearLayout>-->
+    <!--    </LinearLayout>-->
+    <!--        </ScrollView>-->
+</LinearLayout>
