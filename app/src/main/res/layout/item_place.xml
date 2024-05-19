@@ -23,11 +23,19 @@
             android:textStyle="bold" />
 
         <TextView
+            android:id="@+id/reviewTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="review of the place"
+            android:textSize="14sp" />
+
+        <TextView
             android:id="@+id/descriptionTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Description of the place"
             android:textSize="14sp" />
+
     </LinearLayout>
 
     <!-- Spinner 부분 -->

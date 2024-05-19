@@ -24,10 +24,10 @@
 
     <View
         android:id="@+id/textView1"
-        android:layout_width="364dp"
+        android:layout_width="330dp"
         android:layout_height="match_parent"
         android:layout_marginTop="50dp"
-        android:layout_marginBottom="70dp"
+        android:layout_marginBottom="50dp"
         android:background="@drawable/round"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -36,24 +36,57 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0" />
 
-    <FrameLayout
-        android:layout_width="334dp"
-        android:layout_height="443dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginBottom="130dp"
-        android:background="@drawable/rounded_rectangle_shape"
-        app:layout_constraintBottom_toBottomOf="@+id/textView1"
-        app:layout_constraintEnd_toEndOf="@+id/textView1"
-        app:layout_constraintStart_toStartOf="@+id/textView1"
-        app:layout_constraintTop_toTopOf="@+id/textView1">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="80dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/Button1">
 
         <ImageView
             android:id="@+id/imageView"
-            android:layout_width="334dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:background="@drawable/rounded_rectangle_shape"
+            android:layout_width="300dp"
+            android:layout_height="376dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="15dp"
             android:scaleType="fitXY"
             android:src="@drawable/ic_launcher_background" />
-    </FrameLayout>
+
+        <TextView
+            android:id="@+id/textViewName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="장소 이름"
+            android:layout_marginLeft="55dp"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/textViewStar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="별점"
+            android:layout_marginLeft="55dp"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/textViewAddress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="주소"
+            android:layout_marginLeft="55dp"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/textViewTotalReview"
+            android:layout_width="296dp"
+            android:layout_height="134dp"
+            android:layout_marginLeft="55dp"
+            android:text="리뷰 요약"
+            android:textSize="12sp" />
+
+    </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

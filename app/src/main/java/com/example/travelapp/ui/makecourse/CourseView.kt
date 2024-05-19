@@ -54,10 +54,10 @@ class CourseView : Fragment() {
         getCarDirection()
 
         selectedPlaces?.let {
-            it.forEachIndexed { index, place ->
+            it.forEach { place ->
                 val latitude = place.yCoord.toDouble()
                 val longitude = place.xCoord.toDouble()
-                addMarker(latitude, longitude, "${index + 1}. ${place.area}")
+                addMarker(latitude, longitude, place.area)
             }
 
             // 맵 중심을 첫 번째 장소로 설정
