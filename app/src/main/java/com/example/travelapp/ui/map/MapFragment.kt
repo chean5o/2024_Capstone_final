@@ -1,9 +1,11 @@
 package com.example.travelapp.ui.map
 import android.Manifest
+import android.app.AlertDialog
 import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Bundle
+import android.os.Parcelable
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +13,8 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.FrameLayout
 import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
@@ -21,6 +25,7 @@ import com.example.travelapp.R
 import com.example.travelapp.databinding.FragmentMapBinding
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import kotlinx.android.parcel.Parcelize
 import net.daum.mf.map.api.MapPOIItem
 import net.daum.mf.map.api.MapPoint
 import net.daum.mf.map.api.MapView
@@ -30,18 +35,13 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-import android.os.Parcelable
-import android.widget.LinearLayout
-import kotlinx.parcelize.Parcelize
-
 @Parcelize
 data class Location(
     val name: String,
     val y_coord: Double, // latitude 위도
     val x_coord: Double, // longitude 경도
-    val description: String,
     val category: Int, // 카테고리 필드 추가
-    val address: String
+    val adress: String
 ) : Parcelable
 
 object RetrofitClient {
@@ -62,8 +62,20 @@ class MapFragment : Fragment() {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private var mapView: MapView? = null
     private var fixedView: View? = null
-    private val currentMarkers = mutableListOf<MapPOIItem>()
 
+
+//    private val locations = listOf(
+//        Location("Eiffel Tower", 48.8584, 2.2945, "An iconic symbol of Paris.", "문화시설"),
+//        Location("Statue of Liberty", 40.6892, -74.0445, "A gift from France to the United States.", "문화시설"),
+//        Location("남산타워", 37.5512, 126.9882, "A major tourist attraction in Seoul.", "문화시설"),
+//        Location("Cafe de Paris", 48.8534, 2.3488, "Popular tourist cafe in Paris.", "카페"),
+//        Location("Starbucks Seoul", 37.5641, 126.9981, "Busy Starbucks coffee shop in Seoul.", "카페"),
+//        Location("Hallasan Mountain", 33.3617, 126.5292, "The highest mountain in South Korea, located in Jeju.", "문화시설"),
+//        Location("Seongsan Ilchulbong", 33.4581, 126.9426, "Volcanic cone with a huge crater, popular for sunrise views.", "레저시설"),
+//        Location("Jeongbang Waterfall", 33.2411, 126.5594, "A waterfall that falls directly into the sea, a unique feature in Jeju.", "음식점"),
+//        Location("Osulloc Tea Museum", 33.3058, 126.2895, "Museum dedicated to Korean tea culture, located in Jeju.", "문화시설"),
+//        Location("Manjanggul Cave", 33.5281, 126.7717, "One of the finest lava tunnels in the world, found in Jeju.", "산책로")
+//    )
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -137,54 +149,35 @@ class MapFragment : Fragment() {
     }
 
     private fun addFixedViewToMap(name: String, address: String) {
+        // 기존의 뷰를 제거하고 새로운 LinearLayout을 설정합니다.
         fixedView?.let {
             binding.mapView.removeView(it)
             fixedView = null
         }
-        fixedView = FrameLayout(requireContext()).apply {
-            setBackgroundResource(R.drawable.rounded_rectangle_shape)
-            layoutParams = FrameLayout.LayoutParams(900, 800).apply {
-                leftMargin = (mapView?.width ?: 0) / 2 - 450
-                topMargin = (mapView?.height ?: 0) / 2 - 300
-            }
-        }
-
-        val infoTextView = TextView(requireContext()).apply {
-            text = "$name\n$address"
-            textSize = 16f
-            setTextColor(Color.BLACK)
-            gravity = Gravity.CENTER
-            layoutParams = FrameLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
-            ).apply {
-                gravity = Gravity.CENTER
-            }
-        }
-
-        val closeButton = ImageView(requireContext()).apply {
-            setImageResource(R.drawable.baseline_close_24)
-            layoutParams = FrameLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
-            ).apply {
-                gravity = Gravity.TOP or Gravity.END
-                topMargin = 20
-                rightMargin = 30
-            }
-            setOnClickListener {
+        val inflater = LayoutInflater.from(context)
+        fixedView = inflater.inflate(R.layout.fixed_view, binding.mapView, false).apply {
+            findViewById<TextView>(R.id.infoTextView).text = "$name"
+            findViewById<TextView>(R.id.addressTextView).text = "$address"
+            findViewById<ImageView>(R.id.closeButton).setOnClickListener {
                 binding.mapView.removeView(fixedView)
                 fixedView = null
             }
         }
 
-        // 뷰에 컴포넌트 추가
-        (fixedView as FrameLayout).apply {
-            addView(infoTextView)
-            addView(closeButton)
-            binding.mapView.addView(this)
+        // 설정된 위치에 따라 뷰 위치 조정
+        fixedView?.layoutParams = FrameLayout.LayoutParams(
+            FrameLayout.LayoutParams.WRAP_CONTENT,
+            FrameLayout.LayoutParams.WRAP_CONTENT
+        ).apply {
+            gravity = Gravity.CENTER_HORIZONTAL
+            topMargin = (mapView?.height ?: 0) / 2 - 300
+            leftMargin = 50  // 왼쪽 여백 추가
+            rightMargin = 50 // 오른쪽 여백 추가
         }
+
+        binding.mapView.addView(fixedView)
     }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -240,6 +233,26 @@ class MapFragment : Fragment() {
             }
         }
 
+        /*mapView.setOnTouchListener { _, event ->
+            if (event.action == MotionEvent.ACTION_DOWN) {
+                // 맵의 너비와 높이에 대한 중앙 좌표 계산
+                val centerX = mapView.width / 2f
+                val centerY = mapView.height / 2f
+
+                // 클릭된 위치가 중앙의 일정 범위 내에 있는지 확인
+                if (Math.abs(event.x - centerX) < 100 && Math.abs(event.y - centerY) < 100) {
+                    mapView.post {
+                        // 중앙 근처에서 클릭되었을 때만 뷰 추가
+                        addFixedViewToMap(centerX, mapView.height * 0.65f)
+                    }
+                    true // 이벤트 처리 완료
+                } else {
+                    false // 다른 지점 클릭시 이벤트 무시
+                }
+            } else {
+                false // ACTION_DOWN 이외의 액션은 처리하지 않음
+            }
+        }*/
         //수빈이 코드
 //        binding.searchButton.setOnClickListener {
 //            val query = binding.searchEditText.text.toString()
@@ -263,16 +276,13 @@ class MapFragment : Fragment() {
                 inputMethodManager?.hideSoftInputFromWindow(it.windowToken, 0)
                 binding.searchEditText.clearFocus()
             } else {
-                Toast.makeText(requireContext(), "찾고싶은 장소를 입력해주세요.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Please enter a search term.", Toast.LENGTH_SHORT).show()
             }
         }
 
     }
 
     private fun showCategory(category: Int) {
-        mapView?.removePOIItems(currentMarkers.toTypedArray())
-        currentMarkers.clear()
-
         RetrofitClient.instance.getPlaces(category).enqueue(object : Callback<List<Location>> {
             override fun onResponse(call: Call<List<Location>>, response: Response<List<Location>>) {
                 if (response.isSuccessful) {
@@ -291,6 +301,7 @@ class MapFragment : Fragment() {
             }
         })
     }
+
     private fun addMarkerAndShowInfo(location: Location) {
         val marker = MapPOIItem().apply {
             itemName = location.name
@@ -300,45 +311,51 @@ class MapFragment : Fragment() {
             userObject = location
         }
         mapView?.addPOIItem(marker)
-        currentMarkers.add(marker)
     }
 
     private fun showSearchResults(query: String) {
         RetrofitClient.instance.getPlaceDetails(query).enqueue(object : Callback<List<Location>> {
             override fun onResponse(call: Call<List<Location>>, response: Response<List<Location>>) {
                 if (response.isSuccessful) {
-                    response.body()?.let { locations ->
-                        if (locations.isNotEmpty()) {
-                            // 검색 결과가 있을 때
-                            val bundle = Bundle().apply {
-                                putParcelableArrayList("locations", ArrayList(locations))
+                    val locations = response.body()
+                    if (locations.isNullOrEmpty()) {
+                        Toast.makeText(context, "No results found.", Toast.LENGTH_SHORT).show()
+                    } else {
+                        // 입력된 검색어를 통해 필터링
+                        val results = locations.filter { it.name.contains(query, ignoreCase = true) }
+                        val names = results.map { it.name }.toTypedArray()
+
+                        // 검색 결과 다이얼로그 생성 및 표시
+                        val dialog = AlertDialog.Builder(requireContext())
+                            .setTitle("Search Results")
+                            .setItems(names) { _, which ->
+                                val selectedLocation = results[which]
+                                val adjustedLatitude = selectedLocation.y_coord - 0.005
+                                mapView?.setMapCenterPointAndZoomLevel(
+                                    MapPoint.mapPointWithGeoCoord(adjustedLatitude, selectedLocation.x_coord),
+                                    DEFAULT_ZOOM_LEVEL.toInt(),
+                                    true
+                                )
+                                addFixedViewToMap(selectedLocation.name, selectedLocation.adress)
+                                addMarkerAndShowInfo(selectedLocation) // 마커 추가 및 정보 표시 함수 호출
                             }
-                            val fragment = SearchResultFragment().apply {
-                                arguments = bundle
-                            }
-                            mapView?.removeAllPOIItems()
-                            binding.mapView.removeView(mapView)  // mapView 뷰를 부모로부터 안전하게 제거
-                            mapView = null
-                            view?.findViewById<FrameLayout>(R.id.map_view)?.visibility = View.GONE
-                            parentFragmentManager.beginTransaction()
-                                .replace(R.id.fragment_container, fragment)
-                                .addToBackStack(null)
-                                .commit()
-                        } else {
-                            Toast.makeText(context, "No results found.", Toast.LENGTH_SHORT).show()
-                        }
+                            .setNegativeButton("Cancel", null)
+                            .create()
+
+                        dialog.show()
                     }
                 } else {
+                    // 서버 응답은 있으나 성공적이지 않은 경우 (예: 404, 500 등)
                     Toast.makeText(context, "Error: Server returned an error ${response.code()}", Toast.LENGTH_SHORT).show()
                 }
             }
 
             override fun onFailure(call: Call<List<Location>>, t: Throwable) {
+                // 네트워크 요청 실패 (예: 연결 문제, 타임아웃 등)
                 Toast.makeText(context, "Network Error: ${t.message}", Toast.LENGTH_SHORT).show()
             }
         })
     }
-
 
 
     override fun onDestroyView() {

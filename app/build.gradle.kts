@@ -86,4 +86,9 @@ dependencies {
     implementation("com.google.android.gms:play-services-location:18.0.0")
     implementation("com.google.code.gson:gson:2.8.8")
     implementation("com.google.android.material:material:1.4.0")
+    // OkHttp 로깅 인터셉터 (선택적)
+    implementation ("com.squareup.okhttp3:logging-interceptor:4.9.0")
+    // Glide
+    implementation ("com.github.bumptech.glide:glide:4.12.0")
+    annotationProcessor ("com.github.bumptech.glide:compiler:4.12.0")
 }

@@ -50,9 +50,7 @@ class Question3 : Fragment() {
 
             if (voteResults.size == 1) { // 필요한 질문의 수에 따라 변경 가능
                 sendVoteResults(voteResults)
-                Handler(Looper.getMainLooper()).postDelayed({
-                    goToQuestionsFragment()
-                }, 3000)
+                goToQuestionsFragment()
             }
             else {
                 Toast.makeText(context, "모든 항목을 선택해주세요.", Toast.LENGTH_LONG).show()
