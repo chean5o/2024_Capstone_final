@@ -3,9 +3,11 @@ import android.Manifest
 import android.app.AlertDialog
 import android.content.Context
 import android.content.pm.PackageManager
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Parcelable
+import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -29,6 +31,7 @@ import kotlinx.android.parcel.Parcelize
 import net.daum.mf.map.api.MapPOIItem
 import net.daum.mf.map.api.MapPoint
 import net.daum.mf.map.api.MapView
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -158,6 +161,9 @@ class MapFragment : Fragment() {
         fixedView = inflater.inflate(R.layout.fixed_view, binding.mapView, false).apply {
             findViewById<TextView>(R.id.infoTextView).text = "$name"
             findViewById<TextView>(R.id.addressTextView).text = "$address"
+            val imageView = findViewById<ImageView>(R.id.imageView)  // ImageView 찾기
+            loadImageIntoImageView(imageView)  // 이미지 로드 및 설정
+
             findViewById<ImageView>(R.id.closeButton).setOnClickListener {
                 binding.mapView.removeView(fixedView)
                 fixedView = null
@@ -178,6 +184,26 @@ class MapFragment : Fragment() {
         binding.mapView.addView(fixedView)
     }
 
+    private fun loadImageIntoImageView(imageView: ImageView) {
+        RetrofitClient.instance.getImageUrl().enqueue(object : Callback<ResponseBody> {
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                if (response.isSuccessful) {
+                    response.body()?.byteStream()?.let { inputStream ->
+                        val bitmap = BitmapFactory.decodeStream(inputStream)
+                        activity?.runOnUiThread {
+                            imageView.setImageBitmap(bitmap)
+                        }
+                    }
+                } else {
+                    Log.e("API Error", "Response not successful")
+                }
+            }
+
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                Log.e("API Error", "Network error", t)
+            }
+        })
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
