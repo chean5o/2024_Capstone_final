@@ -47,7 +47,7 @@
                 android:tag="yes3"
                 android:text="잘 알려진 장소"
                 android:fontFamily="@font/font"
-                android:textSize="12sp"/>
+                android:textSize="10sp"/>
 
             <Button
                 android:id="@+id/noButton4"
@@ -59,7 +59,7 @@
                 android:tag="no3"
                 android:text="알려지지 않은 장소"
                 android:fontFamily="@font/font"
-                android:textSize="12sp"/>
+                android:textSize="10sp"/>
         </LinearLayout>
 
         <Button

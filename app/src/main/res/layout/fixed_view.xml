@@ -17,8 +17,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/closeButton"
-        android:layout_marginTop="5dp">
+        android:layout_below="@id/closeButton">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -34,8 +33,9 @@
                 android:layout_height="wrap_content"
                 android:textColor="@android:color/black"
                 android:fontFamily="@font/font"
+                android:textStyle="bold"
                 android:layout_marginBottom="5dp"
-                android:textSize="16sp" />
+                android:textSize="17sp" />
 
             <TextView
                 android:id="@+id/addressTextView"
@@ -44,13 +44,26 @@
                 android:textColor="@android:color/black"
                 android:fontFamily="@font/font"
                 android:layout_marginBottom="5dp"
-                android:textSize="12sp" />
+                android:textSize="14sp" />
 
             <ImageView
                 android:id="@+id/imageView11"
-                android:layout_width="150dp"
+                android:layout_width="208dp"
                 android:layout_height="100dp"
-                android:src="@drawable/tangerine" />
+                android:layout_marginBottom="5dp"
+                android:src="@drawable/tangerine"
+                android:scaleType="centerCrop" />
+
+            <TextView
+                android:id="@+id/additionalTextView11"
+                android:layout_width="251dp"
+                android:layout_height="wrap_content"
+                android:text="교통"
+                android:fontFamily="@font/font"
+                android:layout_marginBottom="5dp"
+                android:textStyle="bold"
+                android:textColor="@android:color/black"
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/additionalTextView"
@@ -60,7 +73,18 @@
                 android:fontFamily="@font/font"
                 android:layout_marginBottom="5dp"
                 android:textColor="@android:color/black"
-                android:textSize="12sp" />
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/additionalTextView211"
+                android:layout_width="251dp"
+                android:layout_height="wrap_content"
+                android:text="서비스"
+                android:textStyle="bold"
+                android:fontFamily="@font/font"
+                android:layout_marginBottom="5dp"
+                android:textColor="@android:color/black"
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/additionalTextView2"
@@ -70,7 +94,18 @@
                 android:fontFamily="@font/font"
                 android:layout_marginBottom="5dp"
                 android:textColor="@android:color/black"
-                android:textSize="12sp" />
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/additionalTextView311"
+                android:layout_width="251dp"
+                android:layout_height="wrap_content"
+                android:text="시간"
+                android:textStyle="bold"
+                android:fontFamily="@font/font"
+                android:layout_marginBottom="5dp"
+                android:textColor="@android:color/black"
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/additionalTextView3"
@@ -80,7 +115,18 @@
                 android:fontFamily="@font/font"
                 android:layout_marginBottom="5dp"
                 android:textColor="@android:color/black"
-                android:textSize="12sp" />
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/additionalTextView411"
+                android:layout_width="251dp"
+                android:layout_height="wrap_content"
+                android:text="특이사항"
+                android:textStyle="bold"
+                android:fontFamily="@font/font"
+                android:layout_marginBottom="5dp"
+                android:textColor="@android:color/black"
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/additionalTextView4"
@@ -90,17 +136,28 @@
                 android:fontFamily="@font/font"
                 android:layout_marginBottom="5dp"
                 android:textColor="@android:color/black"
-                android:textSize="12sp" />
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/additionalTextView511"
+                android:layout_width="251dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:text="전체 리뷰"
+                android:textStyle="bold"
+                android:fontFamily="@font/font"
+                android:textColor="@android:color/black"
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/additionalTextView5"
                 android:layout_width="251dp"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
-                android:text="토탈 리뷰"
+                android:text="전체 리뷰"
                 android:fontFamily="@font/font"
                 android:textColor="@android:color/black"
-                android:textSize="12sp" />
+                android:textSize="14sp" />
         </LinearLayout>
     </ScrollView>
 </RelativeLayout>

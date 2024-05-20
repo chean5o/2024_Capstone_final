@@ -26,6 +26,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
+            android:text="휴양/휴식 or 체험활동"
             android:fontFamily="@font/font"
             android:textSize="15sp" />
 
