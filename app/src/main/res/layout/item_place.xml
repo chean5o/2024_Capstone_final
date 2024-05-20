@@ -19,6 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Place Name"
+            android:fontFamily="@font/font"
             android:textSize="18sp"
             android:textStyle="bold" />
 
@@ -27,6 +28,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="review of the place"
+            android:fontFamily="@font/font"
             android:textSize="14sp" />
 
         <TextView
@@ -34,6 +36,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Description of the place"
+            android:fontFamily="@font/font"
             android:textSize="14sp" />
 
     </LinearLayout>

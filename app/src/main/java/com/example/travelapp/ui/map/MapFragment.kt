@@ -188,7 +188,7 @@ class MapFragment : Fragment() {
             FrameLayout.LayoutParams.WRAP_CONTENT
         ).apply {
             gravity = Gravity.CENTER_HORIZONTAL
-            topMargin = (mapView?.height ?: 0) / 2 - 300
+            topMargin = (mapView?.height ?: 0) / 2 - 150
             leftMargin = 50  // 왼쪽 여백 추가
             rightMargin = 50 // 오른쪽 여백 추가
         }

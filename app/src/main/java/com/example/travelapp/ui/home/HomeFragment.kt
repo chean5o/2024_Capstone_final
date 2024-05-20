@@ -68,7 +68,7 @@ class HomeFragment : Fragment() {
                         binding.textViewName.text = review.name
                         binding.textViewStar.text = "별점: ${review.star}"
                         binding.textViewAddress.text = "주소: ${review.address}"
-                        binding.textViewTotalReview.text = "리뷰 요약: ${review.tot_review}"
+                        binding.textViewTotalReview.text = review.tot_review
                     }
                 } else {
                     Log.e("API Error", "Response not successful")

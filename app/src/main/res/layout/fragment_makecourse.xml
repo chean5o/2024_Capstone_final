@@ -48,12 +48,14 @@
                         android:id="@+id/radioMale"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:fontFamily="@font/font"
                         android:text="남" />
 
                     <RadioButton
                         android:id="@+id/radioFemale"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:fontFamily="@font/font"
                         android:text="여" />
                 </RadioGroup>
 
@@ -78,14 +80,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
+                android:fontFamily="@font/font"
+                android:textSize="15sp"
                 android:text="여행 총 예산" />
 
             <TextView
                 android:id="@+id/sliderValueText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/font"
                 android:text="100,000원 - "
                 android:gravity="center_horizontal"
+                android:textSize="12sp"
                 android:layout_marginTop="8dp"/>
 
             <com.google.android.material.slider.RangeSlider
@@ -110,8 +116,9 @@
             android:layout_height="wrap_content"
             android:backgroundTint="@drawable/button_color"
             android:layout_gravity="end"
-            android:text="다음"
-            android:textSize="10sp" />
+            android:fontFamily="@font/font"
+            android:textSize="12sp"
+            android:text="다음" />
     </LinearLayout>
 
 
