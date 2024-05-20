@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.example.travelapp.databinding.FragmentCourseViewBinding
@@ -53,16 +54,20 @@ class CourseView : Fragment() {
         // API 호출을 수행하는 함수 호출
         getCarDirection()
 
-        selectedPlaces?.let {
-            it.forEach { place ->
+        selectedPlaces?.let {places ->
+            val placeNames = places.joinToString(" -> ") { it.area }
+            val displayText = "추천드리는 여행 코스는\n$placeNames\n입니다."
+            binding.placeNamesTextView.text = displayText
+
+            places.forEach { place ->
                 val latitude = place.yCoord.toDouble()
                 val longitude = place.xCoord.toDouble()
                 addMarker(latitude, longitude, place.area)
             }
 
             // 맵 중심을 첫 번째 장소로 설정
-            if (it.isNotEmpty()) {
-                val firstPlace = it[0]
+            if (places.isNotEmpty()) {
+                val firstPlace = places[0]
                 val mapPoint = MapPoint.mapPointWithGeoCoord(firstPlace.yCoord.toDouble(), firstPlace.xCoord.toDouble())
                 mapView?.setMapCenterPoint(mapPoint, true)
                 mapView?.setZoomLevel(3, true)

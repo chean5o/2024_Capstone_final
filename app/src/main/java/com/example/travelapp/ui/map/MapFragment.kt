@@ -169,10 +169,10 @@ class MapFragment : Fragment() {
         fixedView = inflater.inflate(R.layout.fixed_view, binding.mapView, false).apply {
             findViewById<TextView>(R.id.infoTextView).text = "$name    $star"
             findViewById<TextView>(R.id.addressTextView).text = "$address"
-            findViewById<TextView>(R.id.additionalTextView4).text = "$traffic"
-            findViewById<TextView>(R.id.additionalTextView).text = "$service"
+            findViewById<TextView>(R.id.additionalTextView).text = "$traffic"
+            findViewById<TextView>(R.id.additionalTextView2).text = "$service"
             findViewById<TextView>(R.id.additionalTextView3).text = "$time"
-            findViewById<TextView>(R.id.additionalTextView2).text = "$significant"
+            findViewById<TextView>(R.id.additionalTextView4).text = "$significant"
             findViewById<TextView>(R.id.additionalTextView5).text = "$tot_review"
 
             val imageView = findViewById<ImageView>(R.id.imageView11)  // ImageView 찾기
