@@ -50,11 +50,10 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <Spinner
-            android:id="@+id/placeSpinner"
+        <CheckBox
+            android:id="@+id/placeCheckBox"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:entries="@array/place_options" />
+            android:layout_height="wrap_content" />
     </LinearLayout>
 
 </LinearLayout>

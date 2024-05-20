@@ -39,7 +39,7 @@ class Question4 : Fragment() {
 
         // Retrofit 인스턴스 생성 및 초기화
         val retrofit = Retrofit.Builder()
-            .baseUrl("http://192.168.50.164:5000/") // 본인의 서버 URL로 변경하세요
+            .baseUrl("http://192.168.50.34:5000/") // 본인의 서버 URL로 변경하세요
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
@@ -53,6 +53,10 @@ class Question4 : Fragment() {
 
             if (voteResults.size == 1) { // 필요한 질문의 수에 따라 변경 가능
                 sendVoteResults(voteResults)
+                requireActivity().supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container1, LoadingFragment())
+                    .addToBackStack(null)
+                    .commit()
                 Handler(Looper.getMainLooper()).postDelayed({
                     fetchServerDataAndGoToNextFragment()
                 }, 10000)
