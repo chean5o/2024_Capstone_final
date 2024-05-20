@@ -41,7 +41,11 @@ class PlaceList : Fragment() {
         // 버튼 찾기 및 클릭 리스너 설정
         val startQuestionsButton = view.findViewById<Button>(R.id.next_button5)
         startQuestionsButton.setOnClickListener {
-            goToQuestionsFragment()
+            if (selectedSpinnerValues.size >= 3) {
+                goToQuestionsFragment()
+            } else {
+                Toast.makeText(context, "장소를 3개 이상 선택하세요.", Toast.LENGTH_LONG).show()
+            }
         }
     }
 
@@ -101,7 +105,7 @@ class PlaceList : Fragment() {
         view?.findViewById<Button>(R.id.next_button5)?.visibility = View.GONE
 
         val placeResultsList = selectedSpinnerValues.values.map {
-            PlaceResults(it.first.AREA, it.first.X_COORD_x, it.first.Y_COORD_x)
+            PlaceResults(it.first.AREA, it.first.X_COORD_x, it.first.Y_COORD_x, it.first.price_x)
         }
 
         Log.d("PlaceList", "Prepared place results list: $placeResultsList")

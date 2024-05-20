@@ -67,7 +67,7 @@ class HomeFragment : Fragment() {
                     response.body()?.let { review ->
                         binding.textViewName.text = review.name
                         binding.textViewStar.text = "별점: ${review.star}"
-                        binding.textViewAddress.text = "주소: ${review.address}"
+                        binding.textViewAddress.text = review.address
                         binding.textViewTotalReview.text = review.tot_review
                     }
                 } else {
@@ -84,7 +84,7 @@ class HomeFragment : Fragment() {
     }
 
     fun loadAndDisplayImage(context: Context, imageView: ImageView) {
-        RetrofitClient.instance.fetchImageData().enqueue(object : retrofit2.Callback<ResponseBody> {
+        RetrofitClient.instance.fetchImageData().enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 if (response.isSuccessful) {
                     response.body()?.let {

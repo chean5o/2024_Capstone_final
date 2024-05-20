@@ -58,7 +58,7 @@ class Question4 : Fragment() {
                 }, 10000)
             }
             else {
-                Toast.makeText(context, "모든 항목을 선택해주세요.", Toast.LENGTH_LONG).show()
+                Toast.makeText(context, "항목을 선택해주세요.", Toast.LENGTH_LONG).show()
             }
         }
     }

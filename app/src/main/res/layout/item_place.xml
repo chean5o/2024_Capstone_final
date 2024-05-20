@@ -19,6 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Place Name"
+            android:layout_marginBottom="5dp"
             android:fontFamily="@font/font"
             android:textSize="18sp"
             android:textStyle="bold" />
@@ -28,6 +29,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="review of the place"
+            android:layout_marginBottom="5dp"
             android:fontFamily="@font/font"
             android:textSize="14sp" />
 
@@ -37,6 +39,7 @@
             android:layout_height="wrap_content"
             android:text="Description of the place"
             android:fontFamily="@font/font"
+            android:layout_marginBottom="5dp"
             android:textSize="14sp" />
 
     </LinearLayout>
