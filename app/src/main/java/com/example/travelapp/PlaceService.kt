@@ -1,5 +1,5 @@
 package com.example.travelapp
-import com.example.travelapp.ui.home.Review
+import com.example.travelapp.ui.home.MainInfoResponse
 import retrofit2.Call
 import retrofit2.http.*
 import retrofit2.http.GET
@@ -14,11 +14,8 @@ interface PlaceService {
     fun getPlaces(@Path("category") category: Int): Call<List<Location>> // Location은 앞서 정의한 데이터 모델입니다.
 
     @GET("/main_imageurl")
-    fun fetchImageData(): Call<ResponseBody>
+    fun getMainInfoAndImage(): Call<MainInfoResponse>
 
     @GET("/find_map_img/{name}")
     fun ImageData(@Path("name") name: String): Call<ResponseBody>
-
-    @GET("/main_info")
-    fun getMainInfo(): Call<Review>
 }

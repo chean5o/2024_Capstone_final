@@ -55,7 +55,7 @@ data class Location(
 ) : Parcelable
 
 object RetrofitClient {
-    private const val BASE_URL = "http://192.168.50.109:3000/"
+    private const val BASE_URL = "http://172.30.41.65:3000/"
 
     val instance: PlaceService by lazy {
         Retrofit.Builder()
