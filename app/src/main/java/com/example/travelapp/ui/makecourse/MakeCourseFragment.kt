@@ -1,9 +1,5 @@
 package com.example.travelapp.ui.makecourse
 
-//import com.example.travelapp.databinding.FragmentMakecourseBinding
-//import android.os.Bundle
-//import android.view.View
-//import androidx.fragment.app.Fragment
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -28,10 +24,12 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-
 class MakeCourseFragment : Fragment() {
 
-//    private var voteResults = mutableMapOf<Int, String>()
+    private lateinit var voteService: VoteService
+    private val voteResults = mutableMapOf<Int, String>()
+    private lateinit var budgetSlider: RangeSlider
+    private lateinit var sliderValueText: TextView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,14 +44,19 @@ class MakeCourseFragment : Fragment() {
 
         // Retrofit 인스턴스 생성
         val retrofit = Retrofit.Builder()
-            .baseUrl("http://192.168.50.164:5000/") // 본인의 서버 URL로 변경하세요
+            .baseUrl("http://172.30.40.139:5000/") // 본인의 서버 URL로 변경하세요
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
-        val voteService = retrofit.create(VoteService::class.java)
+        voteService = retrofit.create(VoteService::class.java)
 
-        val voteResults = mutableMapOf<Int, String>()
+        setupButtonListeners(view)
+        setupAgeSpinner(view)
+        setupBudgetSlider(view)
+        setupRadioGroup(view)
+    }
 
+    private fun setupButtonListeners(view: View) {
         val startQuestionsButton = view.findViewById<Button>(R.id.next_button)
         startQuestionsButton.setOnClickListener {
             Log.d("MakeCourseFragment", "Next button clicked")
@@ -68,7 +71,9 @@ class MakeCourseFragment : Fragment() {
                 Toast.makeText(context, "모든 항목을 선택해주세요.", Toast.LENGTH_LONG).show()
             }
         }
+    }
 
+    private fun setupAgeSpinner(view: View) {
         val ageSpinner = view.findViewById<Spinner>(R.id.ageSpinner)
         // 10년 단위 나이 옵션 리스트 생성
         val ageOptions = listOf("10", "20", "30", "40", "50", "60")
@@ -89,10 +94,11 @@ class MakeCourseFragment : Fragment() {
                 // 아무것도 선택되지 않았을 때의 처리
             }
         }
+    }
 
-        // Find the RangeSlider instance
-        val budgetSlider: RangeSlider = view.findViewById(R.id.budgetSlider)
-        val sliderValueText: TextView = view.findViewById(R.id.sliderValueText)
+    private fun setupBudgetSlider(view: View) {
+        budgetSlider = view.findViewById(R.id.budgetSlider)
+        sliderValueText = view.findViewById(R.id.sliderValueText)
 
         // Set up a listener for when the user stops sliding
         budgetSlider.addOnSliderTouchListener(object : RangeSlider.OnSliderTouchListener {
@@ -101,7 +107,7 @@ class MakeCourseFragment : Fragment() {
             }
 
             override fun onStopTrackingTouch(slider: RangeSlider) {
-                // 사용자가 슬라이더 조작을 마쳤을 때 실행될 코드g
+                // 사용자가 슬라이더 조작을 마쳤을 때 실행될 코드
                 val value = slider.values[0] // 첫 번째 값을 가져옵니다. RangeSlider의 경우 범위를 가지므로, 필요에 따라 적절하게 값을 선택하세요.
 
                 // Convert the slider value to a String and store it in the map
@@ -111,7 +117,9 @@ class MakeCourseFragment : Fragment() {
                 sliderValueText.text = "${String.format("100,000원 - %,.0f원", value)}"
             }
         })
+    }
 
+    private fun setupRadioGroup(view: View) {
         val radioGroup = view.findViewById<RadioGroup>(R.id.radioGroup)
         radioGroup.setOnCheckedChangeListener { group, checkedId ->
             when (checkedId) {
@@ -155,8 +163,10 @@ class MakeCourseFragment : Fragment() {
             .commit()
     }
 
-//    override fun onDestroyView() {fh
-//        super.onDestroyView()
-//        _binding = null
-//    }
+    override fun onResume() {
+        super.onResume()
+        // 프래그먼트가 다시 활성화될 때 슬라이더 값 초기화
+        budgetSlider.values = listOf(100000f)
+        sliderValueText.text = "100,000원 - 100,000원"
+    }
 }

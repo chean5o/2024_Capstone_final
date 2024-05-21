@@ -6,11 +6,9 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
 import android.widget.Button
+import android.widget.CheckBox
 import android.widget.LinearLayout
-import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -19,9 +17,13 @@ import com.example.travelapp.R
 
 class PlaceList : Fragment() {
     private lateinit var linearLayout: LinearLayout
-    private val selectedSpinnerValues = HashMap<String, Pair<DataClass, Int>>()
+    private var selectedPlaces = mutableListOf<DataClass>()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         val view = inflater.inflate(R.layout.fragment_place_list, container, false)
         linearLayout = view.findViewById(R.id.linear_layout_places)
 
@@ -41,7 +43,11 @@ class PlaceList : Fragment() {
         // 버튼 찾기 및 클릭 리스너 설정
         val startQuestionsButton = view.findViewById<Button>(R.id.next_button5)
         startQuestionsButton.setOnClickListener {
-            goToQuestionsFragment()
+            if (selectedPlaces.size >= 3) {
+                goToQuestionsFragment()
+            } else {
+                Toast.makeText(context, "장소를 3개 이상 선택하세요.", Toast.LENGTH_LONG).show()
+            }
         }
     }
 
@@ -54,57 +60,34 @@ class PlaceList : Fragment() {
             val areaTextView: TextView = placeView.findViewById(R.id.nameTextView)
             val priceTextView: TextView = placeView.findViewById(R.id.descriptionTextView)
             val reviewTextView: TextView = placeView.findViewById(R.id.reviewTextView)
-            val spinner: Spinner = placeView.findViewById(R.id.placeSpinner)
+            val checkBox: CheckBox = placeView.findViewById(R.id.placeCheckBox)
 
             // 장소 이름과 설명 설정
             areaTextView.text = place.AREA
             priceTextView.text = "평균 금액: ${place.price_x}원"
             reviewTextView.text = place.tot_review_x
 
-            setupSpinner(spinner, place)
+            checkBox.setOnCheckedChangeListener { _, isChecked ->
+                if (isChecked) {
+                    selectedPlaces.add(place)
+                } else {
+                    selectedPlaces.remove(place)
+                }
+                // 디버깅용 로그 추가
+                Log.d("PlaceList", "Selected places: ${selectedPlaces.size}")
+            }
+
             linearLayout.addView(placeView)
         }
     }
 
-    private fun setupSpinner(spinner: Spinner, place: DataClass) {
-        val adapter = ArrayAdapter.createFromResource(
-            requireContext(),
-            R.array.place_options,
-            android.R.layout.simple_spinner_item
-        ).also { adapter ->
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            spinner.adapter = adapter
-        }
-
-        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
-                val selectedOption = parent.getItemAtPosition(position).toString()
-
-                if (position == 0) {
-                    selectedSpinnerValues.remove(place.AREA)
-                } else {
-                    val selectedNumber = selectedOption.toInt()
-                    // Duplicates check logic can be added here if needed
-                    selectedSpinnerValues[place.AREA] = Pair(place, selectedNumber)
-                }
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>) {
-                selectedSpinnerValues.remove(place.AREA)
-            }
-        }
-    }
-
-
     private fun goToQuestionsFragment() {
-        view?.findViewById<LinearLayout>(R.id.linear_layout_places)?.visibility = View.GONE
-        view?.findViewById<Button>(R.id.next_button5)?.visibility = View.GONE
+        // 디버깅용 로그 추가
+        Log.d("PlaceList", "Navigating to CourseView with ${selectedPlaces.size} places")
 
-        val placeResultsList = selectedSpinnerValues.values.map {
-            PlaceResults(it.first.AREA, it.first.X_COORD_x, it.first.Y_COORD_x)
+        val placeResultsList = selectedPlaces.map {
+            PlaceResults(it.AREA, it.X_COORD_x, it.Y_COORD_x, it.price_x)
         }
-
-        Log.d("PlaceList", "Prepared place results list: $placeResultsList")
 
         val bundle = Bundle().apply {
             putParcelableArrayList("selectedPlaces", ArrayList(placeResultsList))
@@ -116,7 +99,7 @@ class PlaceList : Fragment() {
 
         requireActivity().supportFragmentManager.beginTransaction()
             .replace(R.id.fragment_container1, questionsFragment)
-            .addToBackStack(null)  // 이전 프래그먼트로 돌아갈 수 있도록 백 스택에 추가
+            .addToBackStack(null)
             .commit()
     }
 }

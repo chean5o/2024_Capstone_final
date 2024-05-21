@@ -25,7 +25,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:text="사진 촬영 중요도" />
+            android:text="사진 촬영 중요도"
+            android:fontFamily="@font/font"
+            android:textSize="15sp" />
 
         <LinearLayout
             android:id="@+id/linearLayout5"
@@ -43,7 +45,8 @@
                 android:layout_margin="8dp"
                 android:tag="yes4"
                 android:text="중요하다"
-                android:textSize="10sp"/>
+                android:fontFamily="@font/font"
+                android:textSize="12sp"/>
 
             <Button
                 android:id="@+id/noButton3"
@@ -54,7 +57,8 @@
                 android:layout_margin="8dp"
                 android:tag="no4"
                 android:text="중요하지 않다"
-                android:textSize="10sp"/>
+                android:fontFamily="@font/font"
+                android:textSize="12sp"/>
         </LinearLayout>
 
         <Button
@@ -65,7 +69,8 @@
             android:layout_gravity="end"
             android:layout_marginEnd="8dp"
             android:text="다음"
-            android:textSize="10sp"
+            android:fontFamily="@font/font"
+            android:textSize="12sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

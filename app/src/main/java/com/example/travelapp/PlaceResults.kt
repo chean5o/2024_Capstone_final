@@ -1,8 +1,9 @@
 import android.os.Parcel
 import android.os.Parcelable
 
-data class PlaceResults(val area: String, val xCoord: String, val yCoord: String) : Parcelable {
+data class PlaceResults(val area: String, val xCoord: String, val yCoord: String, val price: String) : Parcelable {
     constructor(parcel: Parcel) : this(
+        parcel.readString() ?: "",
         parcel.readString() ?: "",
         parcel.readString() ?: "",
         parcel.readString() ?: ""
@@ -12,6 +13,7 @@ data class PlaceResults(val area: String, val xCoord: String, val yCoord: String
         parcel.writeString(area)
         parcel.writeString(xCoord)
         parcel.writeString(yCoord)
+        parcel.writeString(price)
     }
 
     override fun describeContents(): Int {

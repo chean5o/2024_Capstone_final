@@ -26,6 +26,8 @@
         android:id="@+id/next_button5"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/font"
+        android:textSize="12sp"
         android:text="다음"
         android:backgroundTint="@drawable/button_color"
         android:layout_marginBottom="56dp"/> <!-- 확인 필요: 색상 리소스가 정확해야 함 -->

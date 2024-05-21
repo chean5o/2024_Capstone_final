@@ -15,8 +15,8 @@
         android:layout_marginTop="20dp"
         android:background="#00ff0000"
         android:fontFamily="@font/font"
-        android:paddingEnd="-2dp"
         android:text="추천 장소"
+        android:textSize="17sp"
         android:textColor="#000000"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
@@ -27,66 +27,97 @@
         android:layout_width="330dp"
         android:layout_height="match_parent"
         android:layout_marginTop="50dp"
-        android:layout_marginBottom="50dp"
+        android:layout_marginBottom="70dp"
         android:background="@drawable/round"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.489"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="80dp"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        app:layout_constraintBottom_toBottomOf="@+id/textView1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/Button1">
+        app:layout_constraintTop_toTopOf="@+id/textView1">
 
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="300dp"
-            android:layout_height="376dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="15dp"
-            android:scaleType="fitXY"
-            android:src="@drawable/ic_launcher_background" />
-
-        <TextView
-            android:id="@+id/textViewName"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="장소 이름"
-            android:layout_marginLeft="55dp"
-            android:textSize="15sp" />
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/textViewStar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="별점"
-            android:layout_marginLeft="55dp"
-            android:textSize="12sp" />
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="300dp"
+                android:layout_height="376dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="15dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_launcher_background" />
 
-        <TextView
-            android:id="@+id/textViewAddress"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="주소"
-            android:layout_marginLeft="55dp"
-            android:textSize="12sp" />
+            <TextView
+                android:id="@+id/textViewName"
+                android:layout_width="290dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="40dp"
+                android:layout_marginBottom="10dp"
+                android:fontFamily="@font/font"
+                android:text="장소 이름"
+                android:textSize="17sp"
+                android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/textViewTotalReview"
-            android:layout_width="296dp"
-            android:layout_height="134dp"
-            android:layout_marginLeft="55dp"
-            android:text="리뷰 요약"
-            android:textSize="12sp" />
+            <TextView
+                android:id="@+id/textViewStar"
+                android:layout_width="290dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="40dp"
+                android:layout_marginBottom="5dp"
+                android:fontFamily="@font/font"
+                android:text="별점"
+                android:textSize="14sp" />
 
-    </LinearLayout>
+            <TextView
+                android:id="@+id/textViewAddress1111"
+                android:layout_width="290dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="40dp"
+                android:layout_marginBottom="5dp"
+                android:fontFamily="@font/font"
+                android:text="주소"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/textViewAddress"
+                android:layout_width="290dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="40dp"
+                android:layout_marginBottom="5dp"
+                android:fontFamily="@font/font"
+                android:text="주소"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/textViewAddress11"
+                android:layout_width="290dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="40dp"
+                android:layout_marginBottom="5dp"
+                android:fontFamily="@font/font"
+                android:text="리뷰 요약"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/textViewTotalReview"
+                android:layout_width="290dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="40dp"
+                android:fontFamily="@font/font"
+                android:text="리뷰 요약"
+                android:textSize="14sp" />
+        </LinearLayout>
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

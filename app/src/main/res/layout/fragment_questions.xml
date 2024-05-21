@@ -27,7 +27,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:text="자연 or 도시" />
+            android:text="자연 or 도시"
+            android:fontFamily="@font/font"
+            android:textSize="15sp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -44,7 +46,8 @@
                 android:tag="yes1"
                 android:text="자연"
                 android:layout_margin="8dp"
-                android:textSize="10sp"/>
+                android:fontFamily="@font/font"
+                android:textSize="12sp"/>
 
             <Button
                 android:id="@+id/noButton1"
@@ -55,7 +58,8 @@
                 android:tag="no1"
                 android:text="도시"
                 android:layout_margin="8dp"
-                android:textSize="10sp"/>
+                android:fontFamily="@font/font"
+                android:textSize="12sp"/>
 
         </LinearLayout>
 
@@ -67,7 +71,8 @@
             android:layout_gravity="end"
             android:layout_marginEnd="8dp"
             android:text="다음"
-            android:textSize="10sp"
+            android:fontFamily="@font/font"
+            android:textSize="12sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

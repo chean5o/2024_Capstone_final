@@ -13,6 +13,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -54,7 +55,7 @@ data class Location(
 ) : Parcelable
 
 object RetrofitClient {
-    private const val BASE_URL = "http://192.168.50.109:3000/"
+    private const val BASE_URL = "http://172.30.41.65:3000/"
 
     val instance: PlaceService by lazy {
         Retrofit.Builder()
@@ -71,6 +72,7 @@ class MapFragment : Fragment() {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private var mapView: MapView? = null
     private var fixedView: View? = null
+    private var selectedButton: Button? = null
 
 
 //    private val locations = listOf(
@@ -167,11 +169,11 @@ class MapFragment : Fragment() {
         fixedView = inflater.inflate(R.layout.fixed_view, binding.mapView, false).apply {
             findViewById<TextView>(R.id.infoTextView).text = "$name    $star"
             findViewById<TextView>(R.id.addressTextView).text = "$address"
-            findViewById<TextView>(R.id.additionalTextView).text = "서비스: $service"
-            findViewById<TextView>(R.id.additionalTextView2).text = "특이사항: $significant"
-            findViewById<TextView>(R.id.additionalTextView3).text = "시간: $time"
-            findViewById<TextView>(R.id.additionalTextView4).text = "교통: $traffic"
-            findViewById<TextView>(R.id.additionalTextView5).text = "전체: $tot_review"
+            findViewById<TextView>(R.id.additionalTextView).text = "$traffic"
+            findViewById<TextView>(R.id.additionalTextView2).text = "$service"
+            findViewById<TextView>(R.id.additionalTextView3).text = "$time"
+            findViewById<TextView>(R.id.additionalTextView4).text = "$significant"
+            findViewById<TextView>(R.id.additionalTextView5).text = "$tot_review"
 
             val imageView = findViewById<ImageView>(R.id.imageView11)  // ImageView 찾기
             loadImageIntoImageView(context, imageView, name)  // 이미지 로드 및 설정
@@ -188,7 +190,7 @@ class MapFragment : Fragment() {
             FrameLayout.LayoutParams.WRAP_CONTENT
         ).apply {
             gravity = Gravity.CENTER_HORIZONTAL
-            topMargin = (mapView?.height ?: 0) / 2 - 300
+            topMargin = (mapView?.height ?: 0) / 2 - 200
             leftMargin = 50  // 왼쪽 여백 추가
             rightMargin = 50 // 오른쪽 여백 추가
         }
@@ -219,6 +221,18 @@ class MapFragment : Fragment() {
 
     }
 
+    private fun selectButton(selected: Button) {
+        val buttons = listOf(binding.btnRestaurant, binding.btnScenic, binding.btnCultural, binding.btnSports)
+
+        buttons.forEach { button ->
+            button.backgroundTintList = ContextCompat.getColorStateList(requireContext(), R.color.white)
+            button.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
+        }
+
+        selected.backgroundTintList = ContextCompat.getColorStateList(requireContext(), R.color.green)
+        selected.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -228,6 +242,12 @@ class MapFragment : Fragment() {
 //        binding.btnCultural.setOnClickListener {
 //            showCategory(3)
 
+        listOf(binding.btnRestaurant, binding.btnScenic, binding.btnCultural, binding.btnSports).forEach { button ->
+            button.background = ContextCompat.getDrawable(requireContext(), R.drawable.rounded_button_background)
+            button.backgroundTintList = ContextCompat.getColorStateList(requireContext(), R.color.white)
+            button.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
+        }
+
         binding.btnRestaurant.apply {
             background = ContextCompat.getDrawable(context, R.drawable.rounded_button_background)
             backgroundTintList = null
@@ -236,6 +256,7 @@ class MapFragment : Fragment() {
 
             // 클릭 리스너 설정
             setOnClickListener {
+                selectButton(it as Button)
                 showCategory(11)
             }
         }
@@ -247,6 +268,7 @@ class MapFragment : Fragment() {
 
             // 클릭 리스너 설정
             setOnClickListener {
+                selectButton(it as Button)
                 showCategory(7)
             }
         }
@@ -258,6 +280,7 @@ class MapFragment : Fragment() {
 
             // 클릭 리스너 설정
             setOnClickListener {
+                selectButton(it as Button)
                 showCategory(3)
             }
         }
@@ -269,7 +292,20 @@ class MapFragment : Fragment() {
 
             // 클릭 리스너 설정
             setOnClickListener {
+                selectButton(it as Button)
                 showCategory(5)
+            }
+        }
+        binding.searchButtonIcon.setOnClickListener {
+            val query = binding.searchEditText.text.toString().trim()
+            if (query.isNotEmpty()) {
+                showSearchResults(query)
+                binding.searchEditText.text.clear()
+                val inputMethodManager = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+                inputMethodManager?.hideSoftInputFromWindow(view.windowToken, 0)
+                binding.searchEditText.clearFocus()
+            } else {
+                Toast.makeText(requireContext(), "Please enter a search term.", Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -307,7 +343,7 @@ class MapFragment : Fragment() {
 //            inputMethodManager?.hideSoftInputFromWindow(it.windowToken, 0)
 //            binding.searchEditText.clearFocus()
 //        }
-        binding.searchButton.setOnClickListener {
+        binding.searchButtonIcon.setOnClickListener {
             val query = binding.searchEditText.text.toString().trim()
             if (query.isNotEmpty()) {
                 showSearchResults(query)
@@ -320,6 +356,12 @@ class MapFragment : Fragment() {
             }
         }
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // 화면에 다시 들어올 때 검색 필드 초기화
+        binding.searchEditText.text.clear()
     }
 
     private fun showCategory(category: Int) {
